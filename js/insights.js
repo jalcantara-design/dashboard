@@ -654,9 +654,280 @@ function PipelinePage() {
   );
 }
 
+/* ── Deal Analysis data ── */
+const WIN_LOSS_BANDS = [
+  { band: 'Overall',  total: 132, won: 48, lost: 84, rate: 36, avgTime: '2.8 days' },
+  { band: '€0-3k',   total: 71,  won: 32, lost: 39, rate: 45, avgTime: '2.1 days' },
+  { band: '€3k-5k',  total: 74,  won: 28, lost: 46, rate: 38, avgTime: '2.4 days' },
+  { band: '€5k-10k', total: 120, won: 42, lost: 78, rate: 35, avgTime: '3.2 days' },
+  { band: '€10k+',   total: 64,  won: 18, lost: 46, rate: 28, avgTime: '4.1 days' },
+];
+
+const LOSS_REASONS = [
+  { reason: 'Price too high',   count: 29, pct: 35, avgSize: '€8,420'  },
+  { reason: 'Competitor won',   count: 24, pct: 28, avgSize: '€12,150' },
+  { reason: 'Timing issues',    count: 15, pct: 18, avgSize: '€6,800'  },
+  { reason: 'No response',      count: 10, pct: 12, avgSize: '€5,200'  },
+  { reason: 'Other',            count: 6,  pct: 7,  avgSize: '€4,100'  },
+];
+
+const PRICE_GAP = [
+  { band: '€0-3k',   offered: '€2,200',  expected: '€2,800',  gap: -21 },
+  { band: '€3k-5k',  offered: '€4,100',  expected: '€4,600',  gap: -11 },
+  { band: '€5k-10k', offered: '€7,200',  expected: '€8,100',  gap: -11 },
+  { band: '€10k+',   offered: '€14,500', expected: '€16,200', gap: -10 },
+];
+
+const FUNNEL_STAGES = [
+  { stage: 'Commission received', deals: 168, value: '€1.28M', dropOff: null, dropOffRate: null, avgTime: '3.2 days', conv: 100 },
+  { stage: 'Commission approved', deals: 94,  value: '€720k',  dropOff: 74,   dropOffRate: 44,   avgTime: '4.1 days', conv: 56  },
+  { stage: 'Offer sent',          deals: 51,  value: '€420k',  dropOff: 43,   dropOffRate: 46,   avgTime: '2.8 days', conv: 30  },
+  { stage: 'Customer approval',   deals: 38,  value: '€310k',  dropOff: 13,   dropOffRate: 25,   avgTime: '1.5 days', conv: 23  },
+  { stage: 'Won',                 deals: 48,  value: '€405k',  dropOff: null, dropOffRate: null, avgTime: '—',        conv: 29  },
+];
+
+const DEALS_AT_RISK = [
+  { customer: 'ABC Corp',       sub: 'Price negotiation stuck',   value: '€24,000', days: '12d', action: 'Schedule exec call'      },
+  { customer: 'XYZ Ltd',        sub: 'Decision maker unavailable',value: '€18,500', days: '8d',  action: 'Find alternate contact'   },
+  { customer: 'Tech Solutions', sub: 'Budget approval pending',   value: '€32,000', days: '6d',  action: 'Follow up with finance'   },
+];
+
+const HIGH_PROB = [
+  { customer: 'Innovation Corp', sub: 'Close: 12 Jan', value: '€45,000', prob: 85, action: 'Send final contract'    },
+  { customer: 'Future Tech',     sub: 'Close: 14 Jan', value: '€28,000', prob: 78, action: 'Schedule closing call'  },
+  { customer: 'Smart Systems',   sub: 'Close: 16 Jan', value: '€22,000', prob: 72, action: 'Address last concerns'  },
+];
+
+function DealAnalysisPage() {
+  return (
+    <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
+
+      {/* Header */}
+      <div>
+        <h1 className="text-[24px] font-bold text-[#111827]">Deal Analysis</h1>
+        <p className="text-[14px] text-[#6b7280] mt-[2px]">Deep insights into deal performance, patterns, and opportunities</p>
+      </div>
+
+      {/* KPI summary */}
+      <div className="flex gap-[48px]">
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Overall Win Rate</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">36.4%</p>
+          <p className="text-[12px] text-[#16a34a] font-medium mt-[6px]">+2.1% vs last period</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Time to Win</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">2.8 days</p>
+          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">+0.3d vs last period</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Deal Value</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€8,420</p>
+          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">-€240 vs last period</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Deals at Risk</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">12</p>
+          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">+3 vs last period</p>
+        </div>
+      </div>
+
+      {/* Win/Loss by Price Band */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Win/Loss Analysis by Price Band</p>
+        </div>
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['PRICE BAND','TOTAL','WON','LOST','WIN RATE','AVG TIME TO CLOSE'].map((h, i) => (
+                <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : i === 4 ? 'text-left pl-[40px]' : i === 5 ? 'text-right' : 'text-right'}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {WIN_LOSS_BANDS.map((r, i) => (
+              <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < WIN_LOSS_BANDS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                <td className="px-[20px] py-[12px] font-semibold text-[#111827]">{r.band}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.total}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#16a34a]">{r.won}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#dc2626]">{r.lost}</td>
+                <td className="px-[20px] py-[12px] pl-[40px]">
+                  <div className="flex items-center gap-[10px]">
+                    <div className="flex-1 h-[6px] bg-[#f1f5f9] rounded-full overflow-hidden" style={{ maxWidth: 80 }}>
+                      <div className="h-full rounded-full bg-[#16a34a]" style={{ width: `${r.rate}%` }} />
+                    </div>
+                    <span className="font-semibold text-[#111827] text-[13px] shrink-0">{r.rate}%</span>
+                  </div>
+                </td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.avgTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Loss Reasons + Price Gap side by side */}
+      <div className="grid grid-cols-2 gap-[16px]">
+
+        {/* Loss Reasons */}
+        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+          <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <p className="text-[14px] font-semibold text-[#111827]">Loss Reasons</p>
+          </div>
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['REASON','COUNT','%','AVG SIZE'].map((h, i) => (
+                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {LOSS_REASONS.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < LOSS_REASONS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-[20px] py-[11px] font-semibold text-[#111827]">{r.reason}</td>
+                  <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.count}</td>
+                  <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.pct}%</td>
+                  <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.avgSize}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Price Gap Analysis */}
+        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+          <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <p className="text-[14px] font-semibold text-[#111827]">Price Gap Analysis</p>
+          </div>
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['BAND','OFFERED','EXPECTED','GAP %'].map((h, i) => (
+                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {PRICE_GAP.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < PRICE_GAP.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-[20px] py-[11px] font-semibold text-[#111827]">{r.band}</td>
+                  <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.offered}</td>
+                  <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.expected}</td>
+                  <td className="px-[20px] py-[11px] text-right font-semibold text-[#dc2626]">{r.gap}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Conversion Funnel Analysis */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Conversion Funnel Analysis</p>
+        </div>
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['STAGE','DEALS','TOTAL VALUE','DROP-OFF','DROP-OFF RATE','AVG TIME','CONVERSION'].map((h, i) => (
+                <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {FUNNEL_STAGES.map((r, i) => (
+              <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < FUNNEL_STAGES.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                <td className="px-[20px] py-[12px] font-semibold text-[#111827]">{r.stage}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.deals}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.value}</td>
+                <td className="px-[20px] py-[12px] text-right font-medium text-[#dc2626]">
+                  {r.dropOff ? `↘${r.dropOff}` : '—'}
+                </td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">
+                  {r.dropOffRate ? `${r.dropOffRate}%` : '—'}
+                </td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.avgTime}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827]">{r.conv}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Deals at Risk + High Probability side by side */}
+      <div className="grid grid-cols-2 gap-[16px]">
+
+        {/* Deals at Risk */}
+        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+          <div className="px-[20px] py-[14px] flex items-center gap-[6px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <span className="text-[#d97706]"><IconInfo /></span>
+            <p className="text-[14px] font-semibold text-[#111827]">Deals at Risk</p>
+          </div>
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['CUSTOMER','VALUE','DAYS','NEXT ACTION'].map((h, i) => (
+                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : i === 3 ? 'text-left' : 'text-right'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {DEALS_AT_RISK.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < DEALS_AT_RISK.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-[20px] py-[12px]">
+                    <p className="font-semibold text-[#111827]">{r.customer}</p>
+                    <p className="text-[11px] text-[#9ca3af] mt-[1px]">{r.sub}</p>
+                  </td>
+                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827] whitespace-nowrap">{r.value}</td>
+                  <td className="px-[20px] py-[12px] text-right font-bold text-[#dc2626]">{r.days}</td>
+                  <td className="px-[20px] py-[12px] text-left text-[#374151] whitespace-nowrap">{r.action}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* High Probability Opportunities */}
+        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+          <div className="px-[20px] py-[14px] flex items-center gap-[6px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <span className="text-[#16a34a] text-[14px] font-bold">↗</span>
+            <p className="text-[14px] font-semibold text-[#111827]">High Probability Opportunities</p>
+          </div>
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['CUSTOMER','VALUE','PROB.','NEXT ACTION'].map((h, i) => (
+                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : i === 3 ? 'text-left' : 'text-right'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {HIGH_PROB.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < HIGH_PROB.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-[20px] py-[12px]">
+                    <p className="font-semibold text-[#111827]">{r.customer}</p>
+                    <p className="text-[11px] text-[#9ca3af] mt-[1px]">{r.sub}</p>
+                  </td>
+                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827] whitespace-nowrap">{r.value}</td>
+                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#16a34a]">{r.prob}%</td>
+                  <td className="px-[20px] py-[12px] text-left text-[#374151] whitespace-nowrap">{r.action}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 function InsightsPage({ page }) {
   if (page === 'team') return <TeamPerformancePage />;
   if (page === 'pipeline') return <PipelinePage />;
+  if (page === 'deals') return <DealAnalysisPage />;
   return <InsightsOverviewPage />;
 }
 
