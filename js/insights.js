@@ -293,7 +293,7 @@ function PipelineTable() {
 }
 
 /* ── Insights page ── */
-function InsightsPage() {
+function InsightsOverviewPage() {
   const [q, setQ] = useState('');
   return (
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
@@ -328,6 +328,188 @@ function InsightsPage() {
       <PipelineTable />
     </div>
   );
+}
+
+/* ── Team Performance data ── */
+const TEAM = [
+  { name: 'Sarah Johnson',  avatar: 'SJ', color: '#7c3aed', open: 24, won: 18, lost: 6, conv: 75, pipeline: '€340k', avgDeal: '€18.9k', timeToWin: '2.1 days', quota: 145, trend: '+12%', up: true,  thisWeek: 5, lastWeek: 4, thisMonth: 18, lastMonth: 15, avgCycle: '2.1 days', largestDeal: '€45,000', activities: 42 },
+  { name: 'Michael Chen',   avatar: 'MC', color: '#0891b2', open: 21, won: 15, lost: 6, conv: 71, pipeline: '€315k', avgDeal: '€21k',   timeToWin: '2.3 days', quota: 132, trend: '+8%',  up: true,  thisWeek: 4, lastWeek: 4, thisMonth: 15, lastMonth: 14, avgCycle: '2.3 days', largestDeal: '€38,500', activities: 38 },
+  { name: 'Emma Wilson',    avatar: 'EW', color: '#16a34a', open: 19, won: 12, lost: 7, conv: 63, pipeline: '€280k', avgDeal: '€23.3k', timeToWin: '2.8 days', quota: 118, trend: '+5%',  up: true,  thisWeek: 3, lastWeek: 3, thisMonth: 12, lastMonth: 11, avgCycle: '2.8 days', largestDeal: '€42,000', activities: 35 },
+  { name: 'David Martinez', avatar: 'DM', color: '#d97706', open: 18, won: 11, lost: 7, conv: 61, pipeline: '€265k', avgDeal: '€24k',   timeToWin: '3.1 days', quota: 98,  trend: '-2%',  up: false, thisWeek: 3, lastWeek: 4, thisMonth: 11, lastMonth: 13, avgCycle: '3.1 days', largestDeal: '€35,000', activities: 31 },
+  { name: 'Lisa Anderson',  avatar: 'LA', color: '#dc2626', open: 16, won: 9,  lost: 7, conv: 56, pipeline: '€225k', avgDeal: '€25k',   timeToWin: '3.4 days', quota: 92,  trend: '-4%',  up: false, thisWeek: 2, lastWeek: 3, thisMonth: 9,  lastMonth: 11, avgCycle: '3.4 days', largestDeal: '€32,500', activities: 28 },
+  { name: 'James Taylor',   avatar: 'JT', color: '#6d28d9', open: 15, won: 8,  lost: 7, conv: 53, pipeline: '€210k', avgDeal: '€26.3k', timeToWin: '3.6 days', quota: 87,  trend: '+1%',  up: true,  thisWeek: 2, lastWeek: 2, thisMonth: 8,  lastMonth: 9,  avgCycle: '3.6 days', largestDeal: '€29,800', activities: 25 },
+];
+
+const ACTIVITY = [
+  { name: 'Sarah Johnson',  activity: 'Won deal #49856732',              customer: 'ABC Corp',           value: '€24,500', time: '2 hours ago', status: 'Won',        sBg: '#f0fdf4', sC: '#16a34a' },
+  { name: 'Michael Chen',   activity: 'Sent offer to customer',          customer: 'Tech Solutions',     value: '€18,000', time: '3 hours ago', status: 'Offer Sent', sBg: '#eff6ff', sC: '#2563eb' },
+  { name: 'Emma Wilson',    activity: 'Deal moved to Customer Approval', customer: 'Global Industries',  value: '€32,000', time: '4 hours ago', status: 'In Progress',sBg: '#fff7ed', sC: '#c2410c' },
+  { name: 'David Martinez', activity: 'Lost deal #49856701',             customer: 'Smart Systems',      value: '€15,000', time: '5 hours ago', status: 'Lost',       sBg: '#fff1f2', sC: '#dc2626' },
+  { name: 'Sarah Johnson',  activity: 'Created new deal',                customer: 'Innovation Corp',    value: '€28,000', time: '6 hours ago', status: 'New',        sBg: '#f9fafb', sC: '#6b7280' },
+  { name: 'Lisa Anderson',  activity: 'Sent follow-up to customer',      customer: 'Future Tech',        value: '€12,000', time: '7 hours ago', status: 'Follow-up',  sBg: '#f5f3ff', sC: '#6d28d9' },
+  { name: 'James Taylor',   activity: 'Won deal #49856690',              customer: 'Digital Enterprises', value: '€19,500', time: '8 hours ago', status: 'Won',        sBg: '#f0fdf4', sC: '#16a34a' },
+  { name: 'Emma Wilson',    activity: 'Scheduled demo call',             customer: 'Cloud Services Inc', value: '€22,000', time: '9 hours ago', status: 'In Progress',sBg: '#fff7ed', sC: '#c2410c' },
+];
+
+function MemberAvatar({ avatar, color }) {
+  return (
+    <div className="size-[28px] rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
+      style={{ background: color }}>{avatar}</div>
+  );
+}
+
+function TeamPerformancePage() {
+  return (
+    <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
+
+      {/* Header */}
+      <div>
+        <h1 className="text-[24px] font-bold text-[#111827]">Team Performance</h1>
+        <p className="text-[14px] text-[#6b7280] mt-[2px]">Track and compare team metrics</p>
+      </div>
+
+      {/* KPI summary */}
+      <div className="flex gap-[48px]">
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Top Performer</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">Sarah<br />Johnson</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">75% conversion rate</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Team Average</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">63.2%</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">Conversion rate</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg. Time to Win</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">2.9 days</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">Team average</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Total Pipeline</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€1.64M</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">All team members</p>
+        </div>
+      </div>
+
+      {/* Leaderboard */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Team Leaderboard</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['RANK','TEAM MEMBER','OPEN','WON','LOST','CONVERSION','PIPELINE','AVG DEAL','TIME TO WIN','QUOTA','TREND'].map((h, i) => (
+                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 1 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px] w-[48px]' : ''}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {TEAM.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="pl-[20px] pr-[14px] py-[11px] text-[12px] text-[#9ca3af]">{i > 0 ? i + 1 : ''}</td>
+                  <td className="px-[14px] py-[11px]">
+                    <div className="flex items-center gap-[8px]">
+                      <MemberAvatar avatar={r.avatar} color={r.color} />
+                      <p className="font-semibold text-[#111827] whitespace-nowrap">{r.name}</p>
+                    </div>
+                  </td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.open}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.won}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lost}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.conv}%</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.pipeline}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgDeal}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.timeToWin}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: r.quota >= 100 ? '#16a34a' : '#dc2626' }}>{r.quota}%</td>
+                  <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[12px] font-semibold whitespace-nowrap" style={{ color: r.up ? '#16a34a' : '#dc2626' }}>
+                    {r.up ? '↗' : '↘'}{r.trend}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Detailed Performance Metrics */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Detailed Performance Metrics</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['TEAM MEMBER','THIS WEEK','LAST WEEK','THIS MONTH','LAST MONTH','AVG DEAL CYCLE','LARGEST DEAL','ACTIVITIES'].map((h, i) => (
+                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left pl-[20px]' : 'text-right'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {TEAM.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="pl-[20px] pr-[14px] py-[11px]">
+                    <div className="flex items-center gap-[8px]">
+                      <MemberAvatar avatar={r.avatar} color={r.color} />
+                      <p className="font-semibold text-[#111827]">{r.name}</p>
+                    </div>
+                  </td>
+                  <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisWeek}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastWeek}</td>
+                  <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisMonth}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastMonth}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgCycle}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.largestDeal}</td>
+                  <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[#374151]">{r.activities}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Recent Activity</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['TEAM MEMBER','ACTIVITY','CUSTOMER','DEAL VALUE','TIME','STATUS'].map((h, i) => (
+                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 1 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px]' : ''}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ACTIVITY.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < ACTIVITY.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="pl-[20px] pr-[14px] py-[11px] font-semibold text-[#111827] whitespace-nowrap">{r.name}</td>
+                  <td className="px-[14px] py-[11px] text-[#374151]">{r.activity}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151] whitespace-nowrap">{r.customer}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.value}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#9ca3af] whitespace-nowrap">{r.time}</td>
+                  <td className="pr-[20px] pl-[14px] py-[11px] text-right">
+                    <span className="text-[12px] font-medium px-[8px] py-[2px] rounded-full whitespace-nowrap" style={{ color: r.sC, background: r.sBg }}>{r.status}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+function InsightsPage({ page }) {
+  if (page === 'team') return <TeamPerformancePage />;
+  return <InsightsOverviewPage />;
 }
 
 Object.assign(window, { InsightsSidebar, InsightsPage });
