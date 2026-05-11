@@ -50,7 +50,7 @@ function KpiCard({ label, value, change, good }) {
         <span className="text-[#d1d5db] shrink-0"><IconInfo /></span>
       </div>
       <p className="text-[24px] font-bold text-[#111827] mb-[6px]">{value}</p>
-      <p className={`text-[12px] font-medium ${good ? 'text-[#16a34a]' : 'text-[#b91c1c]'}`}>{change}</p>
+      <p className={`text-[12px] font-medium ${good === true ? 'text-[#16a34a]' : good === false ? 'text-[#b91c1c]' : 'text-[#6b7280]'}`}>{change}</p>
     </div>
   );
 }
@@ -369,27 +369,11 @@ function TeamPerformancePage() {
       </div>
 
       {/* KPI summary */}
-      <div className="flex gap-[48px]">
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Top Performer</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">Sarah<br />Johnson</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">75% conversion rate</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Team Average</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">63.2%</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">Conversion rate</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg. Time to Win</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">2.9 days</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">Team average</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Total Pipeline</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€1.64M</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">All team members</p>
-        </div>
+      <div className="flex gap-[12px]">
+        <KpiCard label="Top Performer"    value="Sarah Johnson" change="75% conversion rate" />
+        <KpiCard label="Team Average"     value="63.2%"         change="Conversion rate" />
+        <KpiCard label="Avg. Time to Win" value="2.9 days"      change="Team average" />
+        <KpiCard label="Total Pipeline"   value="€1.64M"        change="All team members" />
       </div>
 
       {/* Leaderboard */}
@@ -554,27 +538,11 @@ function PipelinePage() {
       </div>
 
       {/* KPI summary */}
-      <div className="flex gap-[48px]">
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Total Pipeline Value</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€351.0k</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">8 deals</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Weighted Pipeline</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€29.8k</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">Probability-adjusted</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Days in Stage</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">3.3</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">Across all deals</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Deals Closing Soon</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">3</p>
-          <p className="text-[13px] text-[#6b7280] mt-[6px]">Probability ≥ 70%</p>
-        </div>
+      <div className="flex gap-[12px]">
+        <KpiCard label="Total Pipeline Value" value="€351.0k" change="8 deals" />
+        <KpiCard label="Weighted Pipeline"    value="€29.8k"  change="Probability-adjusted" />
+        <KpiCard label="Avg Days in Stage"    value="3.3"     change="Across all deals" />
+        <KpiCard label="Deals Closing Soon"   value="3"       change="Probability ≥ 70%" />
       </div>
 
       {/* Pipeline by Stage */}
@@ -709,27 +677,11 @@ function DealAnalysisPage() {
       </div>
 
       {/* KPI summary */}
-      <div className="flex gap-[48px]">
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Overall Win Rate</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">36.4%</p>
-          <p className="text-[12px] text-[#16a34a] font-medium mt-[6px]">+2.1% vs last period</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Time to Win</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">2.8 days</p>
-          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">+0.3d vs last period</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Deal Value</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€8,420</p>
-          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">-€240 vs last period</p>
-        </div>
-        <div>
-          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Deals at Risk</p>
-          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">12</p>
-          <p className="text-[12px] text-[#dc2626] font-medium mt-[6px]">+3 vs last period</p>
-        </div>
+      <div className="flex gap-[12px]">
+        <KpiCard label="Overall Win Rate" value="36.4%"    change="+2.1% vs last period" good={true}  />
+        <KpiCard label="Avg Time to Win"  value="2.8 days" change="+0.3d vs last period" good={false} />
+        <KpiCard label="Avg Deal Value"   value="€8,420"   change="-€240 vs last period" good={false} />
+        <KpiCard label="Deals at Risk"    value="12"        change="+3 vs last period"   good={false} />
       </div>
 
       {/* Win/Loss by Price Band */}
