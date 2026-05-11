@@ -507,8 +507,156 @@ function TeamPerformancePage() {
   );
 }
 
+/* ── Pipeline data ── */
+const PIPELINE_STAGES = [
+  { stage: 'Commission received', count: 24, value: '€168.0k', avgSize: '€7.0k', pct: 47.9 },
+  { stage: 'Commission approved', count: 14, value: '€94.0k',  avgSize: '€6.7k', pct: 26.8 },
+  { stage: 'Offer',               count: 8,  value: '€51.0k',  avgSize: '€6.4k', pct: 14.5 },
+  { stage: 'Customer approval',   count: 6,  value: '€38.0k',  avgSize: '€6.3k', pct: 10.8 },
+];
+
+const STAGE_STYLE = {
+  'Commission received': { sBg: '#f5f3ff', sC: '#6d28d9' },
+  'Commission approved': { sBg: '#f0fdf4', sC: '#16a34a' },
+  'Offer':               { sBg: '#fff7ed', sC: '#c2410c' },
+  'Customer approval':   { sBg: '#eff6ff', sC: '#2563eb' },
+};
+
+const ALL_DEALS = [
+  { id: '#49854683', customer: 'John Doe',       contact: 'Jane Smith',     status: 'Commission received', price: '€1,000',  expected: '€3,500',  gap: '-€2,500', gapUp: false, assigned: 'Sarah Johnson',  daysInStage: 3, prob: 25, due: '15 Jan' },
+  { id: '#49854682', customer: 'Wendy Malpass',  contact: 'Bob Wilson',     status: 'Commission approved', price: '€6,000',  expected: '€7,000',  gap: '-€1,000', gapUp: false, assigned: 'Michael Chen',   daysInStage: 2, prob: 40, due: '14 Jan' },
+  { id: '#49854681', customer: 'Jane Smith',     contact: 'Alice Brown',    status: 'Offer',               price: '€8,000',  expected: '€7,000',  gap: '+€1,000', gapUp: true,  assigned: 'Emma Wilson',    daysInStage: 5, prob: 65, due: '12 Jan' },
+  { id: '#49854680', customer: 'Robert Johnson', contact: 'Charlie Davis',  status: 'Customer approval',   price: '€4,500',  expected: '€5,200',  gap: '-€700',   gapUp: false, assigned: 'David Martinez', daysInStage: 1, prob: 80, due: '11 Jan' },
+  { id: '#49854679', customer: 'Michael Brown',  contact: 'Diana Evans',    status: 'Commission received', price: '€6,800',  expected: '€8,000',  gap: '-€1,200', gapUp: false, assigned: 'Lisa Anderson',  daysInStage: 4, prob: 30, due: '16 Jan' },
+  { id: '#49854678', customer: 'Sarah Davis',    contact: 'Frank Miller',   status: 'Commission approved', price: '€12,000', expected: '€13,500', gap: '-€1,500', gapUp: false, assigned: 'James Taylor',   daysInStage: 6, prob: 50, due: '13 Jan' },
+  { id: '#49854677', customer: 'Tom Wilson',     contact: 'Grace Taylor',   status: 'Offer',               price: '€3,200',  expected: '€3,800',  gap: '-€600',   gapUp: false, assigned: 'Sarah Johnson',  daysInStage: 3, prob: 70, due: '10 Jan' },
+  { id: '#49854676', customer: 'Emily Martinez', contact: 'Henry Anderson', status: 'Customer approval',   price: '€9,500',  expected: '€10,000', gap: '-€500',   gapUp: false, assigned: 'Michael Chen',   daysInStage: 2, prob: 85, due: '09 Jan' },
+];
+
+function PipelinePage() {
+  return (
+    <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
+
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[24px] font-bold text-[#111827]">Pipeline</h1>
+          <p className="text-[14px] text-[#6b7280] mt-[2px]">Manage and track all deals in progress</p>
+        </div>
+        <div className="flex items-center gap-[8px]">
+          <button className="flex items-center gap-[6px] border border-[#e5e7eb] rounded-[8px] px-[12px] h-[34px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
+            <IconChevronDown size={14} /> Filter
+          </button>
+          <button className="flex items-center gap-[6px] border border-[#e5e7eb] rounded-[8px] px-[12px] h-[34px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
+            ↓ Export
+          </button>
+        </div>
+      </div>
+
+      {/* KPI summary */}
+      <div className="flex gap-[48px]">
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Total Pipeline Value</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€351.0k</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">8 deals</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Weighted Pipeline</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">€29.8k</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">Probability-adjusted</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Avg Days in Stage</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">3.3</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">Across all deals</p>
+        </div>
+        <div>
+          <p className="text-[13px] font-medium text-[#6b7280] mb-[8px]">Deals Closing Soon</p>
+          <p className="text-[36px] font-bold text-[#111827] leading-[1.1]">3</p>
+          <p className="text-[13px] text-[#6b7280] mt-[6px]">Probability ≥ 70%</p>
+        </div>
+      </div>
+
+      {/* Pipeline by Stage */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Pipeline by Stage</p>
+        </div>
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['STAGE', 'DEAL COUNT', 'TOTAL VALUE', 'AVG DEAL SIZE', '% OF PIPELINE'].map((h, i) => (
+                <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {PIPELINE_STAGES.map((r, i) => (
+              <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < PIPELINE_STAGES.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                <td className="px-[20px] py-[12px]">
+                  <div className="flex items-center gap-[10px]">
+                    <div className="h-[8px] rounded-full shrink-0" style={{ width: `${r.pct * 1.4}px`, background: STAGE_STYLE[r.stage].sC, opacity: 0.5 }} />
+                    <p className="font-semibold text-[#111827]">{r.stage}</p>
+                  </div>
+                </td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827]">{r.count}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.value}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.avgSize}</td>
+                <td className="px-[20px] py-[12px] text-right font-bold text-[#111827]">{r.pct}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* All Deals */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">All Deals</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                {['DEAL ID','CUSTOMER','CONTACT','STATUS','PRICE OFFERED','CUSTOMER EXPECTED','PRICE GAP','ASSIGNED','DAYS IN STAGE','PROBABILITY','DUE DATE'].map((h, i) => (
+                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 3 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px]' : ''} ${i === 10 ? 'pr-[20px]' : ''}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ALL_DEALS.map((r, i) => {
+                const { sBg, sC } = STAGE_STYLE[r.status];
+                const probColor = r.prob >= 70 ? '#16a34a' : r.prob >= 40 ? '#d97706' : '#dc2626';
+                return (
+                  <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < ALL_DEALS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                    <td className="pl-[20px] pr-[14px] py-[12px] font-mono text-[12px] text-[#374151] whitespace-nowrap">{r.id}</td>
+                    <td className="px-[14px] py-[12px] font-semibold text-[#111827] whitespace-nowrap">{r.customer}</td>
+                    <td className="px-[14px] py-[12px] text-[#374151] whitespace-nowrap">{r.contact}</td>
+                    <td className="px-[14px] py-[12px]">
+                      <span className="text-[11px] font-medium px-[8px] py-[2px] rounded-full whitespace-nowrap" style={{ color: sC, background: sBg }}>{r.status}</span>
+                    </td>
+                    <td className="px-[14px] py-[12px] text-right font-semibold text-[#111827]">{r.price}</td>
+                    <td className="px-[14px] py-[12px] text-right text-[#374151]">{r.expected}</td>
+                    <td className="px-[14px] py-[12px] text-right font-semibold whitespace-nowrap" style={{ color: r.gapUp ? '#16a34a' : '#dc2626' }}>{r.gap}</td>
+                    <td className="px-[14px] py-[12px] text-right text-[#374151] whitespace-nowrap">{r.assigned}</td>
+                    <td className="px-[14px] py-[12px] text-right text-[#374151]">{r.daysInStage} days</td>
+                    <td className="px-[14px] py-[12px] text-right font-semibold" style={{ color: probColor }}>{r.prob}%</td>
+                    <td className="pr-[20px] pl-[14px] py-[12px] text-right text-[#374151] whitespace-nowrap">{r.due}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 function InsightsPage({ page }) {
   if (page === 'team') return <TeamPerformancePage />;
+  if (page === 'pipeline') return <PipelinePage />;
   return <InsightsOverviewPage />;
 }
 
