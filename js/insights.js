@@ -670,17 +670,6 @@ const FUNNEL_STAGES = [
   { stage: 'Won',            deals: 48,  value: '€405k',  dropOff: null, dropOffRate: null, avgTime: '—',        conv: 29  },
 ];
 
-const DEALS_AT_RISK = [
-  { customer: 'ABC Corp',       sub: 'Price negotiation stuck',   value: '€24,000', days: '12d', action: 'Schedule exec call'      },
-  { customer: 'XYZ Ltd',        sub: 'Decision maker unavailable',value: '€18,500', days: '8d',  action: 'Find alternate contact'   },
-  { customer: 'Tech Solutions', sub: 'Budget approval pending',   value: '€32,000', days: '6d',  action: 'Follow up with finance'   },
-];
-
-const HIGH_PROB = [
-  { customer: 'Innovation Corp', sub: 'Close: 12 Jan', value: '€45,000', prob: 85, action: 'Send final contract'    },
-  { customer: 'Future Tech',     sub: 'Close: 14 Jan', value: '€28,000', prob: 78, action: 'Schedule closing call'  },
-  { customer: 'Smart Systems',   sub: 'Close: 16 Jan', value: '€22,000', prob: 72, action: 'Address last concerns'  },
-];
 
 function DealAnalysisPage() {
   return (
@@ -697,7 +686,6 @@ function DealAnalysisPage() {
         <KpiCard label="Overall Win Rate" value="36.4%"    change="+2.1% vs last period" good={true}  />
         <KpiCard label="Avg Time to Win"  value="2.8 days" change="+0.3d vs last period" good={false} />
         <KpiCard label="Avg Deal Value"   value="€8,420"   change="-€240 vs last period" good={false} />
-        <KpiCard label="Deals at Risk"    value="12"        change="+3 vs last period"   good={false} />
       </div>
 
       {/* Win/Loss by Price Band */}
@@ -824,69 +812,6 @@ function DealAnalysisPage() {
         </table>
       </div>
 
-      {/* Deals at Risk + High Probability side by side */}
-      <div className="grid grid-cols-2 gap-[16px]">
-
-        {/* Deals at Risk */}
-        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
-          <div className="px-[20px] py-[14px] flex items-center gap-[6px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
-            <span className="text-[#d97706]"><IconInfo /></span>
-            <p className="text-[14px] font-semibold text-[#111827]">Deals at Risk</p>
-          </div>
-          <table className="w-full text-[13px]">
-            <thead>
-              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['CUSTOMER','VALUE','DAYS','NEXT ACTION'].map((h, i) => (
-                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : i === 3 ? 'text-left' : 'text-right'}`}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {DEALS_AT_RISK.map((r, i) => (
-                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < DEALS_AT_RISK.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                  <td className="px-[20px] py-[12px]">
-                    <p className="font-semibold text-[#111827]">{r.customer}</p>
-                    <p className="text-[11px] text-[#9ca3af] mt-[1px]">{r.sub}</p>
-                  </td>
-                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827] whitespace-nowrap">{r.value}</td>
-                  <td className="px-[20px] py-[12px] text-right font-bold text-[#dc2626]">{r.days}</td>
-                  <td className="px-[20px] py-[12px] text-left text-[#374151] whitespace-nowrap">{r.action}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* High Probability Opportunities */}
-        <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
-          <div className="px-[20px] py-[14px] flex items-center gap-[6px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
-            <span className="text-[#16a34a] text-[14px] font-bold">↗</span>
-            <p className="text-[14px] font-semibold text-[#111827]">High Probability Opportunities</p>
-          </div>
-          <table className="w-full text-[13px]">
-            <thead>
-              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['CUSTOMER','VALUE','PROB.','NEXT ACTION'].map((h, i) => (
-                  <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide ${i === 0 ? 'text-left' : i === 3 ? 'text-left' : 'text-right'}`}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {HIGH_PROB.map((r, i) => (
-                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < HIGH_PROB.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                  <td className="px-[20px] py-[12px]">
-                    <p className="font-semibold text-[#111827]">{r.customer}</p>
-                    <p className="text-[11px] text-[#9ca3af] mt-[1px]">{r.sub}</p>
-                  </td>
-                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#111827] whitespace-nowrap">{r.value}</td>
-                  <td className="px-[20px] py-[12px] text-right font-semibold text-[#16a34a]">{r.prob}%</td>
-                  <td className="px-[20px] py-[12px] text-left text-[#374151] whitespace-nowrap">{r.action}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
     </div>
   );
