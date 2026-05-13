@@ -189,9 +189,9 @@ function OnsiteOffsite() {
 
 /* ── Smart insights ── */
 const SMART = [
-  { icon: '🔴', title: '12 deals at risk', desc: 'High price gap or no customer response in 24h+', cta: 'View deals',       target: 'pipeline' },
-  { icon: '🟠', title: '5 deals stuck',    desc: 'No action for more than 24h',                    cta: 'View deals',       target: 'pipeline' },
-  { icon: '🟢', title: 'Top performer',    desc: 'Chris leads with 48% conversion this week',       cta: 'View leaderboard', target: 'team'     },
+  { dot: '#dc2626', title: '12 deals at risk', desc: 'High price gap or no customer response in 24h+', cta: 'View deals',       target: 'pipeline' },
+  { dot: '#f97316', title: '5 deals stuck',    desc: 'No action for more than 24h',                    cta: 'View deals',       target: 'pipeline' },
+  { dot: '#16a34a', title: 'Top performer',    desc: 'Chris leads with 48% conversion this week',       cta: 'View leaderboard', target: 'team'     },
 ];
 
 function SmartInsights({ setPage }) {
@@ -199,15 +199,14 @@ function SmartInsights({ setPage }) {
     <div className="bg-white border border-[#e5e7eb] rounded-[8px] p-[20px] flex flex-col gap-[12px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[6px]">
-          <span>✨</span>
           <p className="text-[14px] font-semibold text-[#111827]">Smart insights</p>
         </div>
         <button className="text-[#9ca3af] text-[18px] leading-none hover:text-[#6b7280]">∧</button>
       </div>
-      {SMART.map(({ icon, title, desc, cta, target }, i) => (
+      {SMART.map(({ dot, title, desc, cta, target }, i) => (
         <div key={i} className="border border-[#f1f5f9] rounded-[8px] p-[12px]">
           <div className="flex items-center gap-[8px] mb-[4px]">
-            <span className="text-[14px]">{icon}</span>
+            <span className="size-[8px] rounded-full shrink-0" style={{ background: dot }} />
             <p className="text-[13px] font-semibold text-[#111827]">{title}</p>
           </div>
           <p className="text-[12px] text-[#6b7280] leading-[16px] mb-[8px]">{desc}</p>
@@ -300,7 +299,6 @@ function PipelineTable() {
 
 /* ── Insights page ── */
 function InsightsOverviewPage({ setPage }) {
-  const [q, setQ] = useState('');
   return (
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
       <div className="flex items-center justify-between">
@@ -314,13 +312,6 @@ function InsightsOverviewPage({ setPage }) {
         <button className="flex items-center gap-[4px] text-[13px] font-medium text-[#374151] hover:text-[#111827] transition-colors">
           View full performance <IconChevronRight size={14} />
         </button>
-        <div className="flex-1" />
-        <div className="relative" style={{ width: 320, height: 34 }}>
-          <span className="absolute left-[10px] top-1/2 -translate-y-1/2 text-[#9ca3af] pointer-events-none"><IconSearch /></span>
-          <input value={q} onChange={e => setQ(e.target.value)}
-            placeholder="Search by registration, reference, created by..."
-            className="w-full h-full bg-white border border-[#e5e7eb] rounded-[8px] pl-[32px] pr-[10px] text-[13px] text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:border-[#6b7280] transition-colors" />
-        </div>
       </div>
       <div className="flex gap-[12px]">
         {KPI_DATA.map((k, i) => <KpiCard key={i} {...k} />)}
