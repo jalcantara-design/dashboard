@@ -230,7 +230,7 @@ const PIPELINE = [
 ];
 
 function PipelineTable() {
-  const cols = ['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer expectation', 'Next action', 'Due date', 'Time in stage'];
+  const cols = ['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer exp.', 'Gap', 'Next action', 'Due date', 'Time in stage'];
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
       <div className="flex items-center gap-[8px] px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
@@ -250,7 +250,11 @@ function PipelineTable() {
             </tr>
           </thead>
           <tbody>
-            {PIPELINE.map((r, i) => (
+            {PIPELINE.map((r, i) => {
+              const gap = parseEuro(r.price) - parseEuro(r.exp);
+              const gapLabel = (gap >= 0 ? '+' : '−') + '€' + Math.abs(gap).toLocaleString();
+              const gapColor = gap >= 0 ? '#16a34a' : '#dc2626';
+              return (
               <tr key={i} className="hover:bg-[#f9fafb] transition-colors"
                 style={{ borderBottom: i < PIPELINE.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                 <td className="px-[20px] py-[11px]">
@@ -275,6 +279,7 @@ function PipelineTable() {
                 </td>
                 <td className="px-[14px] py-[11px] text-right font-medium text-[#111827]">{r.price}</td>
                 <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.exp}</td>
+                <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: gapColor }}>{gapLabel}</td>
                 <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.action}</td>
                 <td className="px-[14px] py-[11px] text-right font-medium" style={{ color: r.dC }}>{r.due}</td>
                 <td className="px-[20px] py-[11px] text-right">
@@ -284,7 +289,8 @@ function PipelineTable() {
                   </div>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -359,13 +365,19 @@ function MemberAvatar({ avatar, color }) {
 }
 
 function TeamPerformancePage() {
+  const [teamTab, setTeamTab] = useState('Summary');
   return (
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
 
       {/* Header */}
-      <div>
-        <h1 className="text-[24px] font-bold text-[#111827]">Team Performance</h1>
-        <p className="text-[14px] text-[#6b7280] mt-[2px]">Track and compare team metrics</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[24px] font-bold text-[#111827]">Team Performance</h1>
+          <p className="text-[14px] text-[#6b7280] mt-[2px]">Track and compare team metrics</p>
+        </div>
+        <button className="flex items-center gap-[8px] border border-[#e5e7eb] rounded-[8px] px-[14px] h-[36px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
+          Date range: Last 7 days <IconChevronDown />
+        </button>
       </div>
 
       {/* KPI summary */}
@@ -376,82 +388,84 @@ function TeamPerformancePage() {
         <KpiCard label="Total Pipeline"   value="€1.64M"        change="All team members" />
       </div>
 
-      {/* Leaderboard */}
+      {/* Leaderboard (tabbed) */}
       <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
-        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <div className="px-[20px] py-[14px] flex items-center justify-between" style={{ borderBottom: '1px solid #f1f5f9' }}>
           <p className="text-[14px] font-semibold text-[#111827]">Team Leaderboard</p>
+          <div className="flex border border-[#e5e7eb] rounded-[6px] overflow-hidden">
+            {['Summary', 'Detailed'].map(t => (
+              <button key={t} onClick={() => setTeamTab(t)}
+                className={`px-[14px] h-[30px] text-[12px] font-medium transition-colors ${
+                  teamTab === t ? 'bg-[#111827] text-white' : 'text-[#374151] hover:bg-[#f9fafb]'
+                }`}>{t}</button>
+            ))}
+          </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-[13px]">
-            <thead>
-              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['RANK','TEAM MEMBER','OPEN','WON','LOST','CONVERSION','PIPELINE','AVG DEAL','TIME TO WIN','QUOTA','TREND'].map((h, i) => (
-                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 1 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px] w-[48px]' : ''}`}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TEAM.map((r, i) => (
-                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                  <td className="pl-[20px] pr-[14px] py-[11px] text-[12px] text-[#9ca3af]">{i > 0 ? i + 1 : ''}</td>
-                  <td className="px-[14px] py-[11px]">
-                    <div className="flex items-center gap-[8px]">
-                      <MemberAvatar avatar={r.avatar} color={r.color} />
-                      <p className="font-semibold text-[#111827] whitespace-nowrap">{r.name}</p>
-                    </div>
-                  </td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.open}</td>
-                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.won}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lost}</td>
-                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.conv}%</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.pipeline}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgDeal}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.timeToWin}</td>
-                  <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: r.quota >= 100 ? '#16a34a' : '#dc2626' }}>{r.quota}%</td>
-                  <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[12px] font-semibold whitespace-nowrap" style={{ color: r.up ? '#16a34a' : '#dc2626' }}>
-                    {r.up ? '↗' : '↘'}{r.trend}
-                  </td>
+          {teamTab === 'Summary' ? (
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  {['RANK','TEAM MEMBER','OPEN','WON','LOST','CONVERSION','PIPELINE','AVG DEAL','TIME TO WIN','QUOTA','TREND'].map((h, i) => (
+                    <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 1 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px] w-[48px]' : ''}`}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Detailed Performance Metrics */}
-      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
-        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
-          <p className="text-[14px] font-semibold text-[#111827]">Detailed Performance Metrics</p>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-[13px]">
-            <thead>
-              <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['TEAM MEMBER','THIS WEEK','LAST WEEK','THIS MONTH','LAST MONTH','AVG DEAL CYCLE','LARGEST DEAL','ACTIVITIES'].map((h, i) => (
-                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left pl-[20px]' : 'text-right'}`}>{h}</th>
+              </thead>
+              <tbody>
+                {TEAM.map((r, i) => (
+                  <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                    <td className="pl-[20px] pr-[14px] py-[11px] text-[13px] font-semibold" style={{ color: i === 0 ? '#d97706' : '#9ca3af' }}>{i + 1}</td>
+                    <td className="px-[14px] py-[11px]">
+                      <div className="flex items-center gap-[8px]">
+                        <MemberAvatar avatar={r.avatar} color={r.color} />
+                        <p className="font-semibold text-[#111827] whitespace-nowrap">{r.name}</p>
+                      </div>
+                    </td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.open}</td>
+                    <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.won}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lost}</td>
+                    <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.conv}%</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.pipeline}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgDeal}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.timeToWin}</td>
+                    <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: r.quota >= 100 ? '#16a34a' : '#dc2626' }}>{r.quota}%</td>
+                    <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[12px] font-semibold whitespace-nowrap" style={{ color: r.up ? '#16a34a' : '#dc2626' }}>
+                      {r.up ? '↗' : '↘'}{r.trend}
+                    </td>
+                  </tr>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TEAM.map((r, i) => (
-                <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                  <td className="pl-[20px] pr-[14px] py-[11px]">
-                    <div className="flex items-center gap-[8px]">
-                      <MemberAvatar avatar={r.avatar} color={r.color} />
-                      <p className="font-semibold text-[#111827]">{r.name}</p>
-                    </div>
-                  </td>
-                  <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisWeek}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastWeek}</td>
-                  <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisMonth}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastMonth}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgCycle}</td>
-                  <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.largestDeal}</td>
-                  <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[#374151]">{r.activities}</td>
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  {['TEAM MEMBER','THIS WEEK','LAST WEEK','THIS MONTH','LAST MONTH','AVG DEAL CYCLE','LARGEST DEAL','ACTIVITIES'].map((h, i) => (
+                    <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left pl-[20px]' : 'text-right'}`}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {TEAM.map((r, i) => (
+                  <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < TEAM.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                    <td className="pl-[20px] pr-[14px] py-[11px]">
+                      <div className="flex items-center gap-[8px]">
+                        <MemberAvatar avatar={r.avatar} color={r.color} />
+                        <p className="font-semibold text-[#111827]">{r.name}</p>
+                      </div>
+                    </td>
+                    <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisWeek}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastWeek}</td>
+                    <td className="px-[14px] py-[11px] text-right font-bold text-[#111827]">{r.thisMonth}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.lastMonth}</td>
+                    <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.avgCycle}</td>
+                    <td className="px-[14px] py-[11px] text-right font-semibold text-[#111827]">{r.largestDeal}</td>
+                    <td className="pr-[20px] pl-[14px] py-[11px] text-right text-[#374151]">{r.activities}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
@@ -519,6 +533,8 @@ const ALL_DEALS = [
   { id: '49854676', make: 'NISSAN QASHQAI',    owner: 'Michael',oBg: '#0891b2', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d',  dot: '#16a34a' },
 ];
 
+function parseEuro(s) { return parseInt(s.replace(/[€,]/g, ''), 10) || 0; }
+
 function PipelinePage() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [ownerFilter,  setOwnerFilter]  = useState('All');
@@ -539,6 +555,9 @@ function PipelinePage() {
           <p className="text-[14px] text-[#6b7280] mt-[2px]">Manage and track all deals in progress</p>
         </div>
         <div className="flex items-center gap-[8px]">
+          <button className="flex items-center gap-[8px] border border-[#e5e7eb] rounded-[8px] px-[14px] h-[36px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
+            Date range: Last 7 days <IconChevronDown />
+          </button>
           <button className="flex items-center gap-[6px] border border-[#e5e7eb] rounded-[8px] px-[12px] h-[34px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
             ↓ Export
           </button>
@@ -608,7 +627,7 @@ function PipelinePage() {
           <table className="w-full text-[13px]">
             <thead>
               <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer expectation', 'Next action', 'Due date', 'Time in stage'].map((h, i) => (
+                {['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer exp.', 'Gap', 'Next action', 'Due date', 'Time in stage'].map((h, i) => (
                   <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left pl-[20px]' : i < 3 ? 'text-left' : 'text-right'}`}>{h}</th>
                 ))}
               </tr>
@@ -617,7 +636,11 @@ function PipelinePage() {
               {filtered.length === 0 && (
                 <tr><td colSpan={8} className="px-[20px] py-[24px] text-center text-[13px] text-[#9ca3af]">No deals match the selected filters.</td></tr>
               )}
-              {filtered.map((r, i) => (
+              {filtered.map((r, i) => {
+                const gap = parseEuro(r.price) - parseEuro(r.exp);
+                const gapLabel = (gap >= 0 ? '+' : '−') + '€' + Math.abs(gap).toLocaleString();
+                const gapColor = gap >= 0 ? '#16a34a' : '#dc2626';
+                return (
                 <tr key={i} className="hover:bg-[#f9fafb] transition-colors"
                   style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                   <td className="px-[20px] py-[11px]">
@@ -642,6 +665,7 @@ function PipelinePage() {
                   </td>
                   <td className="px-[14px] py-[11px] text-right font-medium text-[#111827]">{r.price}</td>
                   <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.exp}</td>
+                  <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: gapColor }}>{gapLabel}</td>
                   <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.action}</td>
                   <td className="px-[14px] py-[11px] text-right font-medium" style={{ color: r.dC }}>{r.due}</td>
                   <td className="px-[20px] py-[11px] text-right">
@@ -651,7 +675,8 @@ function PipelinePage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -699,9 +724,14 @@ function DealAnalysisPage() {
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
 
       {/* Header */}
-      <div>
-        <h1 className="text-[24px] font-bold text-[#111827]">Deal Analysis</h1>
-        <p className="text-[14px] text-[#6b7280] mt-[2px]">Deep insights into deal performance, patterns, and opportunities</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[24px] font-bold text-[#111827]">Deal Analysis</h1>
+          <p className="text-[14px] text-[#6b7280] mt-[2px]">Deep insights into deal performance, patterns, and opportunities</p>
+        </div>
+        <button className="flex items-center gap-[8px] border border-[#e5e7eb] rounded-[8px] px-[14px] h-[36px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
+          Date range: Last 7 days <IconChevronDown />
+        </button>
       </div>
 
       {/* KPI summary */}
