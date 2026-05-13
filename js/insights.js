@@ -38,7 +38,7 @@ const KPI_DATA = [
   { label: 'Units won',                value: '48',       change: '↑ 12% vs last 7 days',      good: true  },
   { label: 'Conversion rate',          value: '36.4%',    change: '↓ 4.2pp vs last 7 days',    good: false },
   { label: 'Pipeline value',           value: '€1.28M',   change: '↑ 14% vs last 7 days',      good: true  },
-  { label: 'Avg. delta (exp. vs won)', value: '-€1,240',  change: '↓ €210 vs last 7 days',     good: false },
+  { label: 'Avg. price gap',           value: '-€1,240',  change: '↓ €210 vs last 7 days',     good: false },
   { label: 'Avg. time to win',         value: '2.8 days', change: '↓ 0.4 days vs last 7 days', good: true  },
 ];
 
@@ -57,10 +57,10 @@ function KpiCard({ label, value, change, good }) {
 
 /* ── Conversion funnel ── */
 const FUNNEL = [
-  { label: 'Valuations created', n: 132, pct: null,    color: '#c7d9ea' },
-  { label: 'Sent to customer',   n: 96,  pct: '72.7%', color: '#9ab8d0' },
-  { label: 'Customer Approved',  n: 68,  pct: '51.5%', color: '#6d97b6' },
-  { label: 'Won',                n: 48,  pct: '36.4%', color: '#4a7a9b' },
+  { label: 'New',            n: 132, pct: null,    color: '#c7d9ea' },
+  { label: 'Valuation sent', n: 96,  pct: '72.7%', color: '#9ab8d0' },
+  { label: 'Offered',        n: 68,  pct: '51.5%', color: '#6d97b6' },
+  { label: 'Won',            n: 48,  pct: '36.4%', color: '#4a7a9b' },
 ];
 
 function ConversionFunnel() {
@@ -189,12 +189,12 @@ function OnsiteOffsite() {
 
 /* ── Smart insights ── */
 const SMART = [
-  { icon: '🔴', title: '12 deals at risk', desc: 'High price gap or no customer response in 24h+', cta: 'View deals'      },
-  { icon: '🟠', title: '5 deals stuck',    desc: 'No action for more than 24h',                    cta: 'View deals'      },
-  { icon: '🟢', title: 'Top performer',    desc: 'Chris leads with 48% conversion this week',       cta: 'View leaderboard'},
+  { icon: '🔴', title: '12 deals at risk', desc: 'High price gap or no customer response in 24h+', cta: 'View deals',       target: 'pipeline' },
+  { icon: '🟠', title: '5 deals stuck',    desc: 'No action for more than 24h',                    cta: 'View deals',       target: 'pipeline' },
+  { icon: '🟢', title: 'Top performer',    desc: 'Chris leads with 48% conversion this week',       cta: 'View leaderboard', target: 'team'     },
 ];
 
-function SmartInsights() {
+function SmartInsights({ setPage }) {
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-[8px] p-[20px] flex flex-col gap-[12px]">
       <div className="flex items-center justify-between">
@@ -204,14 +204,14 @@ function SmartInsights() {
         </div>
         <button className="text-[#9ca3af] text-[18px] leading-none hover:text-[#6b7280]">∧</button>
       </div>
-      {SMART.map(({ icon, title, desc, cta }, i) => (
+      {SMART.map(({ icon, title, desc, cta, target }, i) => (
         <div key={i} className="border border-[#f1f5f9] rounded-[8px] p-[12px]">
           <div className="flex items-center gap-[8px] mb-[4px]">
             <span className="text-[14px]">{icon}</span>
             <p className="text-[13px] font-semibold text-[#111827]">{title}</p>
           </div>
           <p className="text-[12px] text-[#6b7280] leading-[16px] mb-[8px]">{desc}</p>
-          <button className="flex items-center gap-[4px] text-[12px] font-medium text-[#374151] hover:text-[#111827] transition-colors">
+          <button onClick={() => setPage(target)} className="flex items-center gap-[4px] text-[12px] font-medium text-[#374151] hover:text-[#111827] transition-colors">
             {cta} <IconChevronRight size={12} />
           </button>
         </div>
@@ -293,7 +293,7 @@ function PipelineTable() {
 }
 
 /* ── Insights page ── */
-function InsightsOverviewPage() {
+function InsightsOverviewPage({ setPage }) {
   const [q, setQ] = useState('');
   return (
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
@@ -323,7 +323,7 @@ function InsightsOverviewPage() {
         <ConversionFunnel />
         <PriceBands />
         <OnsiteOffsite />
-        <SmartInsights />
+        <SmartInsights setPage={setPage} />
       </div>
       <PipelineTable />
     </div>
@@ -520,6 +520,15 @@ const ALL_DEALS = [
 ];
 
 function PipelinePage() {
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [ownerFilter,  setOwnerFilter]  = useState('All');
+  const statuses = ['All', 'New', 'Valuation sent', 'Offered', 'Negotiating', 'Won'];
+  const owners   = ['All', ...Array.from(new Set(ALL_DEALS.map(d => d.owner)))];
+  const filtered = ALL_DEALS.filter(d =>
+    (statusFilter === 'All' || d.status === statusFilter) &&
+    (ownerFilter  === 'All' || d.owner  === ownerFilter)
+  );
+
   return (
     <div className="flex flex-col gap-[24px] px-[32px] py-[24px] pb-[40px]">
 
@@ -530,9 +539,6 @@ function PipelinePage() {
           <p className="text-[14px] text-[#6b7280] mt-[2px]">Manage and track all deals in progress</p>
         </div>
         <div className="flex items-center gap-[8px]">
-          <button className="flex items-center gap-[6px] border border-[#e5e7eb] rounded-[8px] px-[12px] h-[34px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
-            <IconChevronDown size={14} /> Filter
-          </button>
           <button className="flex items-center gap-[6px] border border-[#e5e7eb] rounded-[8px] px-[12px] h-[34px] text-[13px] font-medium text-[#374151] bg-white hover:bg-[#f9fafb] transition-colors">
             ↓ Export
           </button>
@@ -581,8 +587,22 @@ function PipelinePage() {
 
       {/* All Deals */}
       <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
-        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
-          <p className="text-[14px] font-semibold text-[#111827]">All Deals</p>
+        <div className="px-[20px] pt-[14px] pb-[12px] flex flex-col gap-[12px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <div className="flex items-center justify-between">
+            <p className="text-[14px] font-semibold text-[#111827]">All Deals <span className="text-[13px] font-normal text-[#9ca3af] ml-[6px]">{filtered.length} deals</span></p>
+            <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}
+              className="border border-[#e5e7eb] rounded-[6px] px-[8px] h-[28px] text-[12px] text-[#374151] bg-white focus:outline-none cursor-pointer">
+              {owners.map(o => <option key={o}>{o === 'All' ? 'All owners' : o}</option>)}
+            </select>
+          </div>
+          <div className="flex gap-[6px] flex-wrap">
+            {statuses.map(s => (
+              <button key={s} onClick={() => setStatusFilter(s)}
+                className={`px-[10px] h-[26px] rounded-full text-[12px] font-medium transition-colors ${
+                  statusFilter === s ? 'bg-[#111827] text-white' : 'border border-[#e5e7eb] text-[#374151] hover:bg-[#f9fafb]'
+                }`}>{s}</button>
+            ))}
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
@@ -594,9 +614,12 @@ function PipelinePage() {
               </tr>
             </thead>
             <tbody>
-              {ALL_DEALS.map((r, i) => (
+              {filtered.length === 0 && (
+                <tr><td colSpan={8} className="px-[20px] py-[24px] text-center text-[13px] text-[#9ca3af]">No deals match the selected filters.</td></tr>
+              )}
+              {filtered.map((r, i) => (
                 <tr key={i} className="hover:bg-[#f9fafb] transition-colors"
-                  style={{ borderBottom: i < ALL_DEALS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none' }}>
                   <td className="px-[20px] py-[11px]">
                     <div className="flex items-center gap-[6px]">
                       <span className="text-[#9ca3af]"><IconExternal /></span>
@@ -817,11 +840,11 @@ function DealAnalysisPage() {
   );
 }
 
-function InsightsPage({ page }) {
+function InsightsPage({ page, setPage }) {
   if (page === 'team') return <TeamPerformancePage />;
   if (page === 'pipeline') return <PipelinePage />;
   if (page === 'deals') return <DealAnalysisPage />;
-  return <InsightsOverviewPage />;
+  return <InsightsOverviewPage setPage={setPage} />;
 }
 
 Object.assign(window, { InsightsSidebar, InsightsPage });

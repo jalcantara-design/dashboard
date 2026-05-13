@@ -44,7 +44,7 @@ function App() {
         }
         <main className="flex-1 overflow-y-auto">
           {tab === 'workspace' && <WorkspacePage />}
-          {tab === 'insights'  && <InsightsPage page={insPage} />}
+          {tab === 'insights'  && <InsightsPage page={insPage} setPage={setInsPage} />}
         </main>
       </div>
     </div>
