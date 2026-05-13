@@ -147,7 +147,7 @@ function OnsiteOffsite({ setPage }) {
           <p className="text-[14px] font-semibold text-[#111827]">Onsite vs Offsite</p>
           <span className="text-[#d1d5db]"><IconInfo /></span>
         </div>
-        <button onClick={() => setPage('pipeline')} className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
+        <button onClick={() => setPage('deals')} className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
       </div>
       <div className="flex justify-center mb-[16px]">
         <svg width="152" height="152" viewBox="0 0 152 152">
@@ -817,6 +817,18 @@ const FUNNEL_STAGES = [
 ];
 
 
+const CHANNEL_DATA = [
+  { channel: 'Onsite',           color: '#1e3a5f', units: 78, won: 35, lost: 43, rate: 44.9, avgDeal: '€9,200', avgTime: '2.3 days', avgGap: '-€980'   },
+  { channel: 'Offsite (Auction)', color: '#93c5fd', units: 54, won: 13, lost: 41, rate: 24.1, avgDeal: '€6,800', avgTime: '3.4 days', avgGap: '-€1,580' },
+];
+
+const CHANNEL_BANDS = [
+  { band: '€0–3k',   onsite: 58, offsite: 42, onsiteRate: 52, offsiteRate: 31 },
+  { band: '€3k–7k',  onsite: 62, offsite: 38, onsiteRate: 46, offsiteRate: 22 },
+  { band: '€7k–15k', onsite: 71, offsite: 29, onsiteRate: 33, offsiteRate: 12 },
+  { band: '€15k+',   onsite: 80, offsite: 20, onsiteRate: 25, offsiteRate: 0  },
+];
+
 const LOST_DEALS = [
   { id: '49854685', make: 'FORD MONDEO',    owner: 'Michael', oBg: '#0891b2', exp: '€9,500',  trade: '€7,200',  fair: '€8,400',  gap: -2300, reason: 'Price too high' },
   { id: '49854684', make: 'BMW 3 SERIES',   owner: 'Sarah',   oBg: '#7c3aed', exp: '€14,000', trade: '€11,500', fair: '€12,800', gap: -2500, reason: 'Competitor won'  },
@@ -979,6 +991,80 @@ function DealAnalysisPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Onsite vs Offsite Breakdown */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Onsite vs Offsite Breakdown</p>
+          <p className="text-[12px] text-[#6b7280] mt-[2px]">Volume, conversion rate, and price gap by acquisition channel</p>
+        </div>
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['CHANNEL','UNITS','WON','LOST','WIN RATE','AVG DEAL VALUE','AVG TIME TO WIN','AVG PRICE GAP'].map((h, i) => (
+                <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {CHANNEL_DATA.map((r, i) => (
+              <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < CHANNEL_DATA.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                <td className="px-[20px] py-[12px]">
+                  <div className="flex items-center gap-[8px]">
+                    <div className="size-[10px] rounded-full shrink-0" style={{ background: r.color }} />
+                    <p className="font-semibold text-[#111827]">{r.channel}</p>
+                  </div>
+                </td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.units}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#16a34a]">{r.won}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#dc2626]">{r.lost}</td>
+                <td className="px-[20px] py-[12px] text-right">
+                  <div className="flex items-center justify-end gap-[8px]">
+                    <div className="h-[6px] rounded-full bg-[#f1f5f9] overflow-hidden" style={{ width: 60 }}>
+                      <div className="h-full rounded-full" style={{ width: `${r.rate}%`, background: r.color }} />
+                    </div>
+                    <span className="font-semibold text-[#111827] shrink-0">{r.rate}%</span>
+                  </div>
+                </td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.avgDeal}</td>
+                <td className="px-[20px] py-[12px] text-right text-[#374151]">{r.avgTime}</td>
+                <td className="px-[20px] py-[12px] text-right font-semibold text-[#dc2626]">{r.avgGap}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="px-[20px] py-[14px]" style={{ borderTop: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827] mb-[12px]">Conversion rate by price band and channel</p>
+          <div className="flex text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide mb-[10px] gap-[8px]">
+            <span style={{ width: 80 }}>Band</span>
+            <span className="flex-1">Onsite</span>
+            <span className="flex-1">Offsite</span>
+          </div>
+          <div className="flex flex-col gap-[10px]">
+            {CHANNEL_BANDS.map(({ band, onsite, offsite, onsiteRate, offsiteRate }, i) => (
+              <div key={i} className="flex items-center gap-[8px]">
+                <p className="text-[12px] text-[#374151] shrink-0" style={{ width: 80 }}>{band}</p>
+                <div className="flex-1 flex items-center gap-[6px]">
+                  <div className="flex-1 h-[8px] bg-[#f1f5f9] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full bg-[#1e3a5f]" style={{ width: `${onsiteRate}%` }} />
+                  </div>
+                  <span className="text-[12px] font-semibold text-[#1e3a5f] shrink-0" style={{ width: 36, textAlign: 'right' }}>{onsiteRate}%</span>
+                </div>
+                <div className="flex-1 flex items-center gap-[6px]">
+                  <div className="flex-1 h-[8px] bg-[#f1f5f9] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full bg-[#93c5fd]" style={{ width: `${offsiteRate}%` }} />
+                  </div>
+                  <span className="text-[12px] font-semibold text-[#374151] shrink-0" style={{ width: 36, textAlign: 'right' }}>{offsiteRate}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-[14px] pt-[12px] border-t border-[#f1f5f9] flex items-center gap-[8px]">
+            <span className="size-[8px] rounded-full shrink-0 bg-[#f97316]" />
+            <p className="text-[12px] text-[#92400e]"><span className="font-semibold">Offsite price gap is 61% wider than onsite</span> — auction units have the largest expectation delta across all price bands. Expectation alignment should be a priority for offsite deals.</p>
+          </div>
+        </div>
       </div>
 
       {/* Lost Deal Explainer */}
