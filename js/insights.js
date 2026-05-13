@@ -228,13 +228,13 @@ const PIPELINE = [
   { id: '10D18361', make: 'FORD KUGA',         owner: 'Chris', oBg: '#7c3aed', status: 'Won',           sBg: '#f0fdf4', sC: '#16a34a', price: '€8,750',  exp: '€8,500',  action: 'Create sale',        due: '—',        dC: '#374151', time: '—',     dot: null      },
 ];
 
-function PipelineTable() {
+function PipelineTable({ setPage }) {
   const cols = ['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer exp.', 'Gap', 'Next action', 'Due date', 'Time in stage'];
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
       <div className="flex items-center gap-[8px] px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
         <p className="text-[16px] font-bold text-[#111827]">Pipeline</p>
-        <button className="flex items-center gap-[4px] text-[13px] font-medium text-[#6b7280] hover:text-[#111827] transition-colors">
+        <button onClick={() => setPage('pipeline')} className="flex items-center gap-[4px] text-[13px] font-medium text-[#6b7280] hover:text-[#111827] transition-colors">
           View full pipeline <IconChevronRight size={14} />
         </button>
       </div>
@@ -322,7 +322,7 @@ function InsightsOverviewPage({ setPage }) {
         <OnsiteOffsite setPage={setPage} />
         <SmartInsights setPage={setPage} />
       </div>
-      <PipelineTable />
+      <PipelineTable setPage={setPage} />
     </div>
   );
 }
