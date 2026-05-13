@@ -342,13 +342,13 @@ const TEAM = [
 
 const ACTIVITY = [
   { name: 'Sarah Johnson',  activity: 'Won deal #49856732',              customer: 'ABC Corp',           value: '€24,500', time: '2 hours ago', status: 'Won',        sBg: '#f0fdf4', sC: '#16a34a' },
-  { name: 'Michael Chen',   activity: 'Sent offer to customer',          customer: 'Tech Solutions',     value: '€18,000', time: '3 hours ago', status: 'Offer Sent', sBg: '#eff6ff', sC: '#2563eb' },
-  { name: 'Emma Wilson',    activity: 'Deal moved to Customer Approval', customer: 'Global Industries',  value: '€32,000', time: '4 hours ago', status: 'In Progress',sBg: '#fff7ed', sC: '#c2410c' },
-  { name: 'David Martinez', activity: 'Lost deal #49856701',             customer: 'Smart Systems',      value: '€15,000', time: '5 hours ago', status: 'Lost',       sBg: '#fff1f2', sC: '#dc2626' },
-  { name: 'Sarah Johnson',  activity: 'Created new deal',                customer: 'Innovation Corp',    value: '€28,000', time: '6 hours ago', status: 'New',        sBg: '#f9fafb', sC: '#6b7280' },
-  { name: 'Lisa Anderson',  activity: 'Sent follow-up to customer',      customer: 'Future Tech',        value: '€12,000', time: '7 hours ago', status: 'Follow-up',  sBg: '#f5f3ff', sC: '#6d28d9' },
-  { name: 'James Taylor',   activity: 'Won deal #49856690',              customer: 'Digital Enterprises', value: '€19,500', time: '8 hours ago', status: 'Won',        sBg: '#f0fdf4', sC: '#16a34a' },
-  { name: 'Emma Wilson',    activity: 'Scheduled demo call',             customer: 'Cloud Services Inc', value: '€22,000', time: '9 hours ago', status: 'In Progress',sBg: '#fff7ed', sC: '#c2410c' },
+  { name: 'Michael Chen',   activity: 'Sent offer to customer',          customer: 'Tech Solutions',     value: '€18,000', time: '3 hours ago', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb' },
+  { name: 'Emma Wilson',    activity: 'Deal moved to Customer Approval', customer: 'Global Industries',  value: '€32,000', time: '4 hours ago', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c' },
+  { name: 'David Martinez', activity: 'Lost deal #49856701',             customer: 'Smart Systems',      value: '€15,000', time: '5 hours ago', status: 'Lost',           sBg: '#fff1f2', sC: '#dc2626' },
+  { name: 'Sarah Johnson',  activity: 'Created new deal',                customer: 'Innovation Corp',    value: '€28,000', time: '6 hours ago', status: 'New',            sBg: '#f9fafb', sC: '#6b7280' },
+  { name: 'Lisa Anderson',  activity: 'Sent follow-up to customer',      customer: 'Future Tech',        value: '€12,000', time: '7 hours ago', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c' },
+  { name: 'James Taylor',   activity: 'Won deal #49856690',              customer: 'Digital Enterprises', value: '€19,500', time: '8 hours ago', status: 'Won',           sBg: '#f0fdf4', sC: '#16a34a' },
+  { name: 'Emma Wilson',    activity: 'Scheduled demo call',             customer: 'Cloud Services Inc', value: '€22,000', time: '9 hours ago', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c' },
 ];
 
 function MemberAvatar({ avatar, color }) {
@@ -493,28 +493,30 @@ function TeamPerformancePage() {
 
 /* ── Pipeline data ── */
 const PIPELINE_STAGES = [
-  { stage: 'Commission received', count: 24, value: '€168.0k', avgSize: '€7.0k', pct: 47.9 },
-  { stage: 'Commission approved', count: 14, value: '€94.0k',  avgSize: '€6.7k', pct: 26.8 },
-  { stage: 'Offer',               count: 8,  value: '€51.0k',  avgSize: '€6.4k', pct: 14.5 },
-  { stage: 'Customer approval',   count: 6,  value: '€38.0k',  avgSize: '€6.3k', pct: 10.8 },
+  { stage: 'New',            count: 24, value: '€168.0k', avgSize: '€7.0k', pct: 47.9 },
+  { stage: 'Valuation sent', count: 14, value: '€94.0k',  avgSize: '€6.7k', pct: 26.8 },
+  { stage: 'Offered',        count: 8,  value: '€51.0k',  avgSize: '€6.4k', pct: 14.5 },
+  { stage: 'Negotiating',    count: 6,  value: '€38.0k',  avgSize: '€6.3k', pct: 10.8 },
 ];
 
 const STAGE_STYLE = {
-  'Commission received': { sBg: '#f5f3ff', sC: '#6d28d9' },
-  'Commission approved': { sBg: '#f0fdf4', sC: '#16a34a' },
-  'Offer':               { sBg: '#fff7ed', sC: '#c2410c' },
-  'Customer approval':   { sBg: '#eff6ff', sC: '#2563eb' },
+  'New':            { sBg: '#f9fafb', sC: '#6b7280' },
+  'Valuation sent': { sBg: '#eff6ff', sC: '#2563eb' },
+  'Offered':        { sBg: '#eff6ff', sC: '#2563eb' },
+  'Negotiating':    { sBg: '#fff7ed', sC: '#c2410c' },
+  'Won':            { sBg: '#f0fdf4', sC: '#16a34a' },
+  'Lost':           { sBg: '#fff1f2', sC: '#dc2626' },
 };
 
 const ALL_DEALS = [
-  { id: '49854683', make: 'FORD FOCUS',        owner: 'Sarah',  oBg: '#7c3aed', status: 'Commission received', sBg: '#f5f3ff', sC: '#6d28d9', price: '€1,000',  exp: '€3,500',  action: 'Review commission',   due: '15 Jan', dC: '#b91c1c', time: '3d',  dot: '#b91c1c' },
-  { id: '49854682', make: 'BMW 5 SERIES',      owner: 'Michael',oBg: '#0891b2', status: 'Commission approved', sBg: '#f0fdf4', sC: '#16a34a', price: '€6,000',  exp: '€7,000',  action: 'Awaiting response',   due: '14 Jan', dC: '#f97316', time: '2d',  dot: '#f97316' },
-  { id: '49854681', make: 'AUDI A3',           owner: 'Emma',   oBg: '#16a34a', status: 'Offer',               sBg: '#fff7ed', sC: '#c2410c', price: '€8,000',  exp: '€7,000',  action: 'Follow up call',      due: '12 Jan', dC: '#374151', time: '5d',  dot: '#16a34a' },
-  { id: '49854680', make: 'TOYOTA CAMRY',      owner: 'David',  oBg: '#d97706', status: 'Customer approval',   sBg: '#eff6ff', sC: '#2563eb', price: '€4,500',  exp: '€5,200',  action: 'Awaiting approval',   due: '11 Jan', dC: '#374151', time: '1d',  dot: '#16a34a' },
-  { id: '49854679', make: 'HONDA CIVIC',       owner: 'Lisa',   oBg: '#dc2626', status: 'Commission received', sBg: '#f5f3ff', sC: '#6d28d9', price: '€6,800',  exp: '€8,000',  action: 'Schedule meeting',    due: '16 Jan', dC: '#374151', time: '4d',  dot: '#f97316' },
-  { id: '49854678', make: 'MERCEDES C-CLASS',  owner: 'James',  oBg: '#6d28d9', status: 'Commission approved', sBg: '#f0fdf4', sC: '#16a34a', price: '€12,000', exp: '€13,500', action: 'Send updated offer',  due: '13 Jan', dC: '#374151', time: '6d',  dot: '#b91c1c' },
-  { id: '49854677', make: 'VW GOLF',           owner: 'Sarah',  oBg: '#7c3aed', status: 'Offer',               sBg: '#fff7ed', sC: '#c2410c', price: '€3,200',  exp: '€3,800',  action: 'Check-in',            due: '10 Jan', dC: '#374151', time: '3d',  dot: '#16a34a' },
-  { id: '49854676', make: 'NISSAN QASHQAI',    owner: 'Michael',oBg: '#0891b2', status: 'Customer approval',   sBg: '#eff6ff', sC: '#2563eb', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d',  dot: '#16a34a' },
+  { id: '49854683', make: 'FORD FOCUS',        owner: 'Sarah',  oBg: '#7c3aed', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€1,000',  exp: '€3,500',  action: 'Review valuation',    due: '15 Jan', dC: '#b91c1c', time: '3d',  dot: '#b91c1c' },
+  { id: '49854682', make: 'BMW 5 SERIES',      owner: 'Michael',oBg: '#0891b2', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€6,000',  exp: '€7,000',  action: 'Awaiting response',   due: '14 Jan', dC: '#f97316', time: '2d',  dot: '#f97316' },
+  { id: '49854681', make: 'AUDI A3',           owner: 'Emma',   oBg: '#16a34a', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€8,000',  exp: '€7,000',  action: 'Follow up call',      due: '12 Jan', dC: '#374151', time: '5d',  dot: '#16a34a' },
+  { id: '49854680', make: 'TOYOTA CAMRY',      owner: 'David',  oBg: '#d97706', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€4,500',  exp: '€5,200',  action: 'Counter offer call',  due: '11 Jan', dC: '#374151', time: '1d',  dot: '#16a34a' },
+  { id: '49854679', make: 'HONDA CIVIC',       owner: 'Lisa',   oBg: '#dc2626', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€6,800',  exp: '€8,000',  action: 'Send valuation',      due: '16 Jan', dC: '#374151', time: '4d',  dot: '#f97316' },
+  { id: '49854678', make: 'MERCEDES C-CLASS',  owner: 'James',  oBg: '#6d28d9', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€12,000', exp: '€13,500', action: 'Send updated offer',  due: '13 Jan', dC: '#374151', time: '6d',  dot: '#b91c1c' },
+  { id: '49854677', make: 'VW GOLF',           owner: 'Sarah',  oBg: '#7c3aed', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€3,200',  exp: '€3,800',  action: 'Check-in',            due: '10 Jan', dC: '#374151', time: '3d',  dot: '#16a34a' },
+  { id: '49854676', make: 'NISSAN QASHQAI',    owner: 'Michael',oBg: '#0891b2', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d',  dot: '#16a34a' },
 ];
 
 function PipelinePage() {
@@ -661,11 +663,11 @@ const PRICE_GAP = [
 ];
 
 const FUNNEL_STAGES = [
-  { stage: 'Commission received', deals: 168, value: '€1.28M', dropOff: null, dropOffRate: null, avgTime: '3.2 days', conv: 100 },
-  { stage: 'Commission approved', deals: 94,  value: '€720k',  dropOff: 74,   dropOffRate: 44,   avgTime: '4.1 days', conv: 56  },
-  { stage: 'Offer sent',          deals: 51,  value: '€420k',  dropOff: 43,   dropOffRate: 46,   avgTime: '2.8 days', conv: 30  },
-  { stage: 'Customer approval',   deals: 38,  value: '€310k',  dropOff: 13,   dropOffRate: 25,   avgTime: '1.5 days', conv: 23  },
-  { stage: 'Won',                 deals: 48,  value: '€405k',  dropOff: null, dropOffRate: null, avgTime: '—',        conv: 29  },
+  { stage: 'New',            deals: 168, value: '€1.28M', dropOff: null, dropOffRate: null, avgTime: '3.2 days', conv: 100 },
+  { stage: 'Valuation sent', deals: 94,  value: '€720k',  dropOff: 74,   dropOffRate: 44,   avgTime: '4.1 days', conv: 56  },
+  { stage: 'Offered',        deals: 51,  value: '€420k',  dropOff: 43,   dropOffRate: 46,   avgTime: '2.8 days', conv: 30  },
+  { stage: 'Negotiating',    deals: 38,  value: '€310k',  dropOff: 13,   dropOffRate: 25,   avgTime: '1.5 days', conv: 23  },
+  { stage: 'Won',            deals: 48,  value: '€405k',  dropOff: null, dropOffRate: null, avgTime: '—',        conv: 29  },
 ];
 
 const DEALS_AT_RISK = [
