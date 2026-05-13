@@ -103,7 +103,7 @@ const BANDS = [
   { label: '€15k+',      units: 10, pct: 20, color: '#ef4444' },
 ];
 
-function PriceBands() {
+function PriceBands({ setPage }) {
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-[8px] p-[20px]">
       <div className="flex items-center justify-between mb-[14px]">
@@ -111,7 +111,7 @@ function PriceBands() {
           <p className="text-[14px] font-semibold text-[#111827]">Conversion by price band</p>
           <span className="text-[#d1d5db]"><IconInfo /></span>
         </div>
-        <button className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
+        <button onClick={() => setPage('deals')} className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
       </div>
       <div className="flex text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide mb-[10px]">
         <span className="flex-1">Price band</span>
@@ -135,7 +135,7 @@ function PriceBands() {
 }
 
 /* ── Onsite vs Offsite donut ── */
-function OnsiteOffsite() {
+function OnsiteOffsite({ setPage }) {
   const r = 52, cx = 76, cy = 76, sw = 18;
   const circ = 2 * Math.PI * r;
   const onArc = 0.591 * circ;
@@ -147,7 +147,7 @@ function OnsiteOffsite() {
           <p className="text-[14px] font-semibold text-[#111827]">Onsite vs Offsite</p>
           <span className="text-[#d1d5db]"><IconInfo /></span>
         </div>
-        <button className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
+        <button onClick={() => setPage('pipeline')} className="text-[12px] text-[#6b7280] flex items-center gap-[2px] hover:text-[#111827]">View all <IconChevronRight /></button>
       </div>
       <div className="flex justify-center mb-[16px]">
         <svg width="152" height="152" viewBox="0 0 152 152">
@@ -318,8 +318,8 @@ function InsightsOverviewPage({ setPage }) {
       </div>
       <div className="grid gap-[16px]" style={{ gridTemplateColumns: '1fr 1fr 1fr 260px' }}>
         <ConversionFunnel />
-        <PriceBands />
-        <OnsiteOffsite />
+        <PriceBands setPage={setPage} />
+        <OnsiteOffsite setPage={setPage} />
         <SmartInsights setPage={setPage} />
       </div>
       <PipelineTable />
