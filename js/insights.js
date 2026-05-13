@@ -507,14 +507,14 @@ const STAGE_STYLE = {
 };
 
 const ALL_DEALS = [
-  { id: '#49854683', customer: 'John Doe',       contact: 'Jane Smith',     status: 'Commission received', price: '€1,000',  expected: '€3,500',  gap: '-€2,500', gapUp: false, assigned: 'Sarah Johnson',  daysInStage: 3, prob: 25, due: '15 Jan' },
-  { id: '#49854682', customer: 'Wendy Malpass',  contact: 'Bob Wilson',     status: 'Commission approved', price: '€6,000',  expected: '€7,000',  gap: '-€1,000', gapUp: false, assigned: 'Michael Chen',   daysInStage: 2, prob: 40, due: '14 Jan' },
-  { id: '#49854681', customer: 'Jane Smith',     contact: 'Alice Brown',    status: 'Offer',               price: '€8,000',  expected: '€7,000',  gap: '+€1,000', gapUp: true,  assigned: 'Emma Wilson',    daysInStage: 5, prob: 65, due: '12 Jan' },
-  { id: '#49854680', customer: 'Robert Johnson', contact: 'Charlie Davis',  status: 'Customer approval',   price: '€4,500',  expected: '€5,200',  gap: '-€700',   gapUp: false, assigned: 'David Martinez', daysInStage: 1, prob: 80, due: '11 Jan' },
-  { id: '#49854679', customer: 'Michael Brown',  contact: 'Diana Evans',    status: 'Commission received', price: '€6,800',  expected: '€8,000',  gap: '-€1,200', gapUp: false, assigned: 'Lisa Anderson',  daysInStage: 4, prob: 30, due: '16 Jan' },
-  { id: '#49854678', customer: 'Sarah Davis',    contact: 'Frank Miller',   status: 'Commission approved', price: '€12,000', expected: '€13,500', gap: '-€1,500', gapUp: false, assigned: 'James Taylor',   daysInStage: 6, prob: 50, due: '13 Jan' },
-  { id: '#49854677', customer: 'Tom Wilson',     contact: 'Grace Taylor',   status: 'Offer',               price: '€3,200',  expected: '€3,800',  gap: '-€600',   gapUp: false, assigned: 'Sarah Johnson',  daysInStage: 3, prob: 70, due: '10 Jan' },
-  { id: '#49854676', customer: 'Emily Martinez', contact: 'Henry Anderson', status: 'Customer approval',   price: '€9,500',  expected: '€10,000', gap: '-€500',   gapUp: false, assigned: 'Michael Chen',   daysInStage: 2, prob: 85, due: '09 Jan' },
+  { id: '49854683', make: 'FORD FOCUS',        owner: 'Sarah',  oBg: '#7c3aed', status: 'Commission received', sBg: '#f5f3ff', sC: '#6d28d9', price: '€1,000',  exp: '€3,500',  action: 'Review commission',   due: '15 Jan', dC: '#b91c1c', time: '3d',  dot: '#b91c1c' },
+  { id: '49854682', make: 'BMW 5 SERIES',      owner: 'Michael',oBg: '#0891b2', status: 'Commission approved', sBg: '#f0fdf4', sC: '#16a34a', price: '€6,000',  exp: '€7,000',  action: 'Awaiting response',   due: '14 Jan', dC: '#f97316', time: '2d',  dot: '#f97316' },
+  { id: '49854681', make: 'AUDI A3',           owner: 'Emma',   oBg: '#16a34a', status: 'Offer',               sBg: '#fff7ed', sC: '#c2410c', price: '€8,000',  exp: '€7,000',  action: 'Follow up call',      due: '12 Jan', dC: '#374151', time: '5d',  dot: '#16a34a' },
+  { id: '49854680', make: 'TOYOTA CAMRY',      owner: 'David',  oBg: '#d97706', status: 'Customer approval',   sBg: '#eff6ff', sC: '#2563eb', price: '€4,500',  exp: '€5,200',  action: 'Awaiting approval',   due: '11 Jan', dC: '#374151', time: '1d',  dot: '#16a34a' },
+  { id: '49854679', make: 'HONDA CIVIC',       owner: 'Lisa',   oBg: '#dc2626', status: 'Commission received', sBg: '#f5f3ff', sC: '#6d28d9', price: '€6,800',  exp: '€8,000',  action: 'Schedule meeting',    due: '16 Jan', dC: '#374151', time: '4d',  dot: '#f97316' },
+  { id: '49854678', make: 'MERCEDES C-CLASS',  owner: 'James',  oBg: '#6d28d9', status: 'Commission approved', sBg: '#f0fdf4', sC: '#16a34a', price: '€12,000', exp: '€13,500', action: 'Send updated offer',  due: '13 Jan', dC: '#374151', time: '6d',  dot: '#b91c1c' },
+  { id: '49854677', make: 'VW GOLF',           owner: 'Sarah',  oBg: '#7c3aed', status: 'Offer',               sBg: '#fff7ed', sC: '#c2410c', price: '€3,200',  exp: '€3,800',  action: 'Check-in',            due: '10 Jan', dC: '#374151', time: '3d',  dot: '#16a34a' },
+  { id: '49854676', make: 'NISSAN QASHQAI',    owner: 'Michael',oBg: '#0891b2', status: 'Customer approval',   sBg: '#eff6ff', sC: '#2563eb', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d',  dot: '#16a34a' },
 ];
 
 function PipelinePage() {
@@ -586,33 +586,47 @@ function PipelinePage() {
           <table className="w-full text-[13px]">
             <thead>
               <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                {['DEAL ID','CUSTOMER','CONTACT','STATUS','PRICE OFFERED','CUSTOMER EXPECTED','PRICE GAP','ASSIGNED','DAYS IN STAGE','PROBABILITY','DUE DATE'].map((h, i) => (
-                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 3 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px]' : ''} ${i === 10 ? 'pr-[20px]' : ''}`}>{h}</th>
+                {['Vehicle', 'Owner', 'Status', 'Price offered', 'Customer expectation', 'Next action', 'Due date', 'Time in stage'].map((h, i) => (
+                  <th key={i} className={`px-[14px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i === 0 ? 'text-left pl-[20px]' : i < 3 ? 'text-left' : 'text-right'}`}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {ALL_DEALS.map((r, i) => {
-                const { sBg, sC } = STAGE_STYLE[r.status];
-                const probColor = r.prob >= 70 ? '#16a34a' : r.prob >= 40 ? '#d97706' : '#dc2626';
-                return (
-                  <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < ALL_DEALS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                    <td className="pl-[20px] pr-[14px] py-[12px] font-mono text-[12px] text-[#374151] whitespace-nowrap">{r.id}</td>
-                    <td className="px-[14px] py-[12px] font-semibold text-[#111827] whitespace-nowrap">{r.customer}</td>
-                    <td className="px-[14px] py-[12px] text-[#374151] whitespace-nowrap">{r.contact}</td>
-                    <td className="px-[14px] py-[12px]">
-                      <span className="text-[11px] font-medium px-[8px] py-[2px] rounded-full whitespace-nowrap" style={{ color: sC, background: sBg }}>{r.status}</span>
-                    </td>
-                    <td className="px-[14px] py-[12px] text-right font-semibold text-[#111827]">{r.price}</td>
-                    <td className="px-[14px] py-[12px] text-right text-[#374151]">{r.expected}</td>
-                    <td className="px-[14px] py-[12px] text-right font-semibold whitespace-nowrap" style={{ color: r.gapUp ? '#16a34a' : '#dc2626' }}>{r.gap}</td>
-                    <td className="px-[14px] py-[12px] text-right text-[#374151] whitespace-nowrap">{r.assigned}</td>
-                    <td className="px-[14px] py-[12px] text-right text-[#374151]">{r.daysInStage} days</td>
-                    <td className="px-[14px] py-[12px] text-right font-semibold" style={{ color: probColor }}>{r.prob}%</td>
-                    <td className="pr-[20px] pl-[14px] py-[12px] text-right text-[#374151] whitespace-nowrap">{r.due}</td>
-                  </tr>
-                );
-              })}
+              {ALL_DEALS.map((r, i) => (
+                <tr key={i} className="hover:bg-[#f9fafb] transition-colors"
+                  style={{ borderBottom: i < ALL_DEALS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                  <td className="px-[20px] py-[11px]">
+                    <div className="flex items-center gap-[6px]">
+                      <span className="text-[#9ca3af]"><IconExternal /></span>
+                      <div>
+                        <p className="font-semibold text-[#111827]">{r.id}</p>
+                        <p className="text-[11px] text-[#9ca3af]">{r.make}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-[14px] py-[11px]">
+                    <div className="flex items-center gap-[8px]">
+                      <div className="size-[26px] rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
+                        style={{ background: r.oBg }}>{r.owner[0]}</div>
+                      <p className="text-[#374151]">{r.owner}</p>
+                    </div>
+                  </td>
+                  <td className="px-[14px] py-[11px]">
+                    <span className="text-[12px] font-medium px-[8px] py-[2px] rounded-full"
+                      style={{ color: r.sC, background: r.sBg }}>{r.status}</span>
+                  </td>
+                  <td className="px-[14px] py-[11px] text-right font-medium text-[#111827]">{r.price}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.exp}</td>
+                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.action}</td>
+                  <td className="px-[14px] py-[11px] text-right font-medium" style={{ color: r.dC }}>{r.due}</td>
+                  <td className="px-[20px] py-[11px] text-right">
+                    <div className="flex items-center justify-end gap-[6px]">
+                      <span className="text-[#374151]">{r.time}</span>
+                      {r.dot && <span className="size-[8px] rounded-full shrink-0" style={{ background: r.dot }} />}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
