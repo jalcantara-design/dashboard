@@ -514,14 +514,68 @@ const STAGE_STYLE = {
 };
 
 const ALL_DEALS = [
-  { id: '49854683', make: 'FORD FOCUS',        owner: 'Sarah',  oBg: '#7c3aed', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€1,000',  exp: '€3,500',  action: 'Review valuation',    due: '15 Jan', dC: '#b91c1c', time: '3d',  dot: '#b91c1c' },
-  { id: '49854682', make: 'BMW 5 SERIES',      owner: 'Michael',oBg: '#0891b2', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€6,000',  exp: '€7,000',  action: 'Awaiting response',   due: '14 Jan', dC: '#f97316', time: '2d',  dot: '#f97316' },
-  { id: '49854681', make: 'AUDI A3',           owner: 'Emma',   oBg: '#16a34a', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€8,000',  exp: '€7,000',  action: 'Follow up call',      due: '12 Jan', dC: '#374151', time: '5d',  dot: '#16a34a' },
-  { id: '49854680', make: 'TOYOTA CAMRY',      owner: 'David',  oBg: '#d97706', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€4,500',  exp: '€5,200',  action: 'Counter offer call',  due: '11 Jan', dC: '#374151', time: '1d',  dot: '#16a34a' },
-  { id: '49854679', make: 'HONDA CIVIC',       owner: 'Lisa',   oBg: '#dc2626', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€6,800',  exp: '€8,000',  action: 'Send valuation',      due: '16 Jan', dC: '#374151', time: '4d',  dot: '#f97316' },
-  { id: '49854678', make: 'MERCEDES C-CLASS',  owner: 'James',  oBg: '#6d28d9', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€12,000', exp: '€13,500', action: 'Send updated offer',  due: '13 Jan', dC: '#374151', time: '6d',  dot: '#b91c1c' },
-  { id: '49854677', make: 'VW GOLF',           owner: 'Sarah',  oBg: '#7c3aed', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€3,200',  exp: '€3,800',  action: 'Check-in',            due: '10 Jan', dC: '#374151', time: '3d',  dot: '#16a34a' },
-  { id: '49854676', make: 'NISSAN QASHQAI',    owner: 'Michael',oBg: '#0891b2', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d',  dot: '#16a34a' },
+  { id: '49854683', make: 'FORD FOCUS',       owner: 'Sarah',   oBg: '#7c3aed', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€1,000',  exp: '€3,500',  action: 'Review valuation',   due: '15 Jan', dC: '#b91c1c', time: '3d', dot: '#b91c1c',
+    disc: 'Mechanical noise noted by inspector',
+    tl: [
+      { ts: 'Jan 12 10:05', event: 'Valuation created',         flag: null   },
+      { ts: 'Jan 12 10:08', event: 'Deal opened — New stage',   flag: null   },
+      { ts: 'Jan 15 10:05', event: 'No action in 3 days',       flag: 'slow' },
+    ] },
+  { id: '49854682', make: 'BMW 5 SERIES',     owner: 'Michael', oBg: '#0891b2', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€6,000',  exp: '€7,000',  action: 'Awaiting response',  due: '14 Jan', dC: '#f97316', time: '2d', dot: '#f97316',
+    disc: null,
+    tl: [
+      { ts: 'Jan 12 09:20', event: 'Valuation created',          flag: null   },
+      { ts: 'Jan 12 11:45', event: 'Valuation sent to customer', flag: null   },
+      { ts: 'Jan 14 11:45', event: 'Awaiting response — 2 days', flag: 'slow' },
+    ] },
+  { id: '49854681', make: 'AUDI A3',          owner: 'Emma',    oBg: '#16a34a', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€8,000',  exp: '€7,000',  action: 'Follow up call',     due: '12 Jan', dC: '#374151', time: '5d', dot: '#16a34a',
+    disc: 'Cosmetic damage: rear bumper scuff',
+    tl: [
+      { ts: 'Jan 07 14:10', event: 'Valuation created',            flag: null   },
+      { ts: 'Jan 08 09:30', event: 'Valuation sent to customer',   flag: null   },
+      { ts: 'Jan 09 15:20', event: 'Customer responded',           flag: null   },
+      { ts: 'Jan 09 16:00', event: 'Offer made: €8,000',           flag: null   },
+      { ts: 'Jan 12 16:00', event: 'No response — follow up due',  flag: 'slow' },
+    ] },
+  { id: '49854680', make: 'TOYOTA CAMRY',     owner: 'David',   oBg: '#d97706', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€4,500',  exp: '€5,200',  action: 'Counter offer call', due: '11 Jan', dC: '#374151', time: '1d', dot: '#16a34a',
+    disc: null,
+    tl: [
+      { ts: 'Jan 10 08:45', event: 'Valuation created',                   flag: null },
+      { ts: 'Jan 10 10:00', event: 'Valuation sent to customer',           flag: null },
+      { ts: 'Jan 10 14:30', event: 'Customer expectation received: €5,200',flag: null },
+      { ts: 'Jan 10 15:00', event: 'Counter offer call scheduled',         flag: null },
+    ] },
+  { id: '49854679', make: 'HONDA CIVIC',      owner: 'Lisa',    oBg: '#dc2626', status: 'New',            sBg: '#f9fafb', sC: '#6b7280', price: '€6,800',  exp: '€8,000',  action: 'Send valuation',     due: '16 Jan', dC: '#374151', time: '4d', dot: '#f97316',
+    disc: 'Service history incomplete — 2 years missing',
+    tl: [
+      { ts: 'Jan 11 11:20', event: 'Valuation created',               flag: null   },
+      { ts: 'Jan 15 11:20', event: 'Valuation not yet sent — 4 days', flag: 'slow' },
+    ] },
+  { id: '49854678', make: 'MERCEDES C-CLASS', owner: 'James',   oBg: '#6d28d9', status: 'Valuation sent', sBg: '#eff6ff', sC: '#2563eb', price: '€12,000', exp: '€13,500', action: 'Send updated offer',  due: '13 Jan', dC: '#374151', time: '6d', dot: '#b91c1c',
+    disc: null,
+    tl: [
+      { ts: 'Jan 07 09:00', event: 'Valuation created',          flag: null   },
+      { ts: 'Jan 07 12:30', event: 'Valuation sent to customer', flag: null   },
+      { ts: 'Jan 09 12:30', event: 'Follow-up sent',             flag: null   },
+      { ts: 'Jan 13 12:30', event: 'No response — 6 days',       flag: 'slow' },
+    ] },
+  { id: '49854677', make: 'VW GOLF',          owner: 'Sarah',   oBg: '#7c3aed', status: 'Offered',        sBg: '#eff6ff', sC: '#2563eb', price: '€3,200',  exp: '€3,800',  action: 'Check-in',           due: '10 Jan', dC: '#374151', time: '3d', dot: '#16a34a',
+    disc: 'Minor body work: passenger door dent',
+    tl: [
+      { ts: 'Jan 07 10:15', event: 'Valuation created',           flag: null },
+      { ts: 'Jan 07 14:00', event: 'Valuation sent to customer',  flag: null },
+      { ts: 'Jan 08 09:00', event: 'Offer accepted in principle', flag: null },
+      { ts: 'Jan 10 09:00', event: 'Check-in scheduled',          flag: null },
+    ] },
+  { id: '49854676', make: 'NISSAN QASHQAI',   owner: 'Michael', oBg: '#0891b2', status: 'Negotiating',    sBg: '#fff7ed', sC: '#c2410c', price: '€9,500',  exp: '€10,000', action: 'Create sale',         due: '09 Jan', dC: '#374151', time: '2d', dot: '#16a34a',
+    disc: null,
+    tl: [
+      { ts: 'Jan 07 08:30', event: 'Valuation created',                     flag: null },
+      { ts: 'Jan 07 10:15', event: 'Valuation sent to customer',             flag: null },
+      { ts: 'Jan 08 14:00', event: 'Customer expectation received: €10,000', flag: null },
+      { ts: 'Jan 08 15:30', event: 'Negotiation started',                    flag: null },
+      { ts: 'Jan 09 15:30', event: 'Sale creation pending',                  flag: null },
+    ] },
 ];
 
 function parseEuro(s) { return parseInt(s.replace(/[€,]/g, ''), 10) || 0; }
@@ -529,11 +583,21 @@ function parseEuro(s) { return parseInt(s.replace(/[€,]/g, ''), 10) || 0; }
 function PipelinePage() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [ownerFilter,  setOwnerFilter]  = useState('All');
+  const [actionFilter, setActionFilter] = useState('All');
+  const [dueFilter,    setDueFilter]    = useState('All');
+  const [expandedId,   setExpandedId]   = useState(null);
   const statuses = ['All', 'New', 'Valuation sent', 'Offered', 'Negotiating', 'Won'];
   const owners   = ['All', ...Array.from(new Set(ALL_DEALS.map(d => d.owner)))];
+  const actions  = ['All', ...Array.from(new Set(ALL_DEALS.map(d => d.action)))];
+  const dueDates = ['All', 'Overdue', 'Due soon', 'On track'];
   const filtered = ALL_DEALS.filter(d =>
     (statusFilter === 'All' || d.status === statusFilter) &&
-    (ownerFilter  === 'All' || d.owner  === ownerFilter)
+    (ownerFilter  === 'All' || d.owner  === ownerFilter)  &&
+    (actionFilter === 'All' || d.action === actionFilter) &&
+    (dueFilter    === 'All' ||
+     (dueFilter === 'Overdue'  && d.dC === '#b91c1c') ||
+     (dueFilter === 'Due soon' && d.dC === '#f97316') ||
+     (dueFilter === 'On track' && d.dC === '#374151'))
   );
 
   return (
@@ -598,19 +662,34 @@ function PipelinePage() {
       {/* All Deals */}
       <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
         <div className="px-[20px] pt-[14px] pb-[12px] flex flex-col gap-[12px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          {/* Row 1: title + owner dropdown + action dropdown */}
           <div className="flex items-center justify-between">
             <p className="text-[14px] font-semibold text-[#111827]">All Deals <span className="text-[13px] font-normal text-[#9ca3af] ml-[6px]">{filtered.length} deals</span></p>
-            <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}
-              className="border border-[#e5e7eb] rounded-[6px] px-[8px] h-[28px] text-[12px] text-[#374151] bg-white focus:outline-none cursor-pointer">
-              {owners.map(o => <option key={o}>{o === 'All' ? 'All owners' : o}</option>)}
-            </select>
+            <div className="flex items-center gap-[8px]">
+              <select value={ownerFilter} onChange={e => setOwnerFilter(e.target.value)}
+                className="border border-[#e5e7eb] rounded-[6px] px-[8px] h-[28px] text-[12px] text-[#374151] bg-white focus:outline-none cursor-pointer">
+                {owners.map(o => <option key={o}>{o === 'All' ? 'All owners' : o}</option>)}
+              </select>
+              <select value={actionFilter} onChange={e => setActionFilter(e.target.value)}
+                className="border border-[#e5e7eb] rounded-[6px] px-[8px] h-[28px] text-[12px] text-[#374151] bg-white focus:outline-none cursor-pointer">
+                {actions.map(a => <option key={a}>{a === 'All' ? 'All actions' : a}</option>)}
+              </select>
+            </div>
           </div>
-          <div className="flex gap-[6px] flex-wrap">
+          {/* Row 2: status pills | separator | due date pills */}
+          <div className="flex items-center gap-[6px] flex-wrap">
             {statuses.map(s => (
               <button key={s} onClick={() => setStatusFilter(s)}
                 className={`px-[10px] h-[26px] rounded-full text-[12px] font-medium transition-colors ${
                   statusFilter === s ? 'bg-[#111827] text-white' : 'border border-[#e5e7eb] text-[#374151] hover:bg-[#f9fafb]'
                 }`}>{s}</button>
+            ))}
+            <span className="w-[1px] h-[18px] bg-[#e5e7eb] mx-[2px]" />
+            {dueDates.map(d => (
+              <button key={d} onClick={() => setDueFilter(d)}
+                className={`px-[10px] h-[26px] rounded-full text-[12px] font-medium transition-colors ${
+                  dueFilter === d ? 'bg-[#111827] text-white' : 'border border-[#e5e7eb] text-[#374151] hover:bg-[#f9fafb]'
+                }`}>{d}</button>
             ))}
           </div>
         </div>
@@ -625,47 +704,75 @@ function PipelinePage() {
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={8} className="px-[20px] py-[24px] text-center text-[13px] text-[#9ca3af]">No deals match the selected filters.</td></tr>
+                <tr><td colSpan={9} className="px-[20px] py-[24px] text-center text-[13px] text-[#9ca3af]">No deals match the selected filters.</td></tr>
               )}
               {filtered.map((r, i) => {
                 const gap = parseEuro(r.price) - parseEuro(r.exp);
                 const gapLabel = (gap >= 0 ? '+' : '−') + '€' + Math.abs(gap).toLocaleString();
                 const gapColor = gap >= 0 ? '#16a34a' : '#dc2626';
+                const isExpanded = expandedId === r.id;
+                const isLast = i === filtered.length - 1;
                 return (
-                <tr key={i} className="hover:bg-[#f9fafb] transition-colors"
-                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                  <td className="px-[20px] py-[11px]">
-                    <div className="flex items-center gap-[6px]">
-                      <span className="text-[#9ca3af]"><IconExternal /></span>
-                      <div>
-                        <p className="font-semibold text-[#111827]">{r.id}</p>
-                        <p className="text-[11px] text-[#9ca3af]">{r.make}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-[14px] py-[11px]">
-                    <div className="flex items-center gap-[8px]">
-                      <div className="size-[26px] rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
-                        style={{ background: r.oBg }}>{r.owner[0]}</div>
-                      <p className="text-[#374151]">{r.owner}</p>
-                    </div>
-                  </td>
-                  <td className="px-[14px] py-[11px]">
-                    <span className="text-[12px] font-medium px-[8px] py-[2px] rounded-full"
-                      style={{ color: r.sC, background: r.sBg }}>{r.status}</span>
-                  </td>
-                  <td className="px-[14px] py-[11px] text-right font-medium text-[#111827]">{r.price}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.exp}</td>
-                  <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: gapColor }}>{gapLabel}</td>
-                  <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.action}</td>
-                  <td className="px-[14px] py-[11px] text-right font-medium" style={{ color: r.dC }}>{r.due}</td>
-                  <td className="px-[20px] py-[11px] text-right">
-                    <div className="flex items-center justify-end gap-[6px]">
-                      <span className="text-[#374151]">{r.time}</span>
-                      {r.dot && <span className="size-[8px] rounded-full shrink-0" style={{ background: r.dot }} />}
-                    </div>
-                  </td>
-                </tr>
+                  <React.Fragment key={r.id}>
+                    <tr onClick={() => setExpandedId(isExpanded ? null : r.id)} className="hover:bg-[#f9fafb] cursor-pointer transition-colors"
+                        style={{ borderBottom: (!isExpanded && !isLast) ? '1px solid #f9fafb' : isExpanded ? '1px solid #e5e7eb' : 'none' }}>
+                      <td className="px-[20px] py-[11px]">
+                        <div className="flex items-center gap-[6px]">
+                          <span className="text-[#9ca3af]"><IconExternal /></span>
+                          <div>
+                            <p className="font-semibold text-[#111827]">{r.id}</p>
+                            <p className="text-[11px] text-[#9ca3af]">{r.make}</p>
+                            {r.disc && <span className="inline-block mt-[2px] text-[10px] font-semibold text-[#92400e] bg-[#fff7ed] px-[5px] py-[0.5px] rounded-full">Disclosure</span>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-[14px] py-[11px]">
+                        <div className="flex items-center gap-[8px]">
+                          <div className="size-[26px] rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
+                            style={{ background: r.oBg }}>{r.owner[0]}</div>
+                          <p className="text-[#374151]">{r.owner}</p>
+                        </div>
+                      </td>
+                      <td className="px-[14px] py-[11px]">
+                        <span className="text-[12px] font-medium px-[8px] py-[2px] rounded-full"
+                          style={{ color: r.sC, background: r.sBg }}>{r.status}</span>
+                      </td>
+                      <td className="px-[14px] py-[11px] text-right font-medium text-[#111827]">{r.price}</td>
+                      <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.exp}</td>
+                      <td className="px-[14px] py-[11px] text-right font-semibold" style={{ color: gapColor }}>{gapLabel}</td>
+                      <td className="px-[14px] py-[11px] text-right text-[#374151]">{r.action}</td>
+                      <td className="px-[14px] py-[11px] text-right font-medium" style={{ color: r.dC }}>{r.due}</td>
+                      <td className="px-[20px] py-[11px] text-right">
+                        <div className="flex items-center justify-end gap-[6px]">
+                          <span className="text-[#374151]">{r.time}</span>
+                          {r.dot && <span className="size-[8px] rounded-full shrink-0" style={{ background: r.dot }} />}
+                        </div>
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr style={{ borderBottom: isLast ? 'none' : '1px solid #f9fafb' }}>
+                        <td colSpan={9} className="px-[20px] py-[16px] bg-[#f9fafb]">
+                          <div className="flex flex-col gap-[6px]">
+                            <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wide mb-[4px]">Deal timeline</p>
+                            {r.tl.map((t, j) => (
+                              <div key={j} className="flex items-center gap-[10px]">
+                                <p className="text-[11px] text-[#9ca3af] shrink-0 w-[110px]">{t.ts}</p>
+                                <span className="size-[6px] rounded-full shrink-0" style={{ background: t.flag === 'slow' ? '#f97316' : '#d1d5db' }} />
+                                <p className={`text-[12px] ${t.flag === 'slow' ? 'font-semibold text-[#c2410c]' : 'text-[#374151]'}`}>{t.event}</p>
+                                {t.flag === 'slow' && <span className="text-[10px] font-bold bg-[#fff7ed] text-[#c2410c] border border-[#fed7aa] px-[6px] py-[1px] rounded-full">slow</span>}
+                              </div>
+                            ))}
+                          </div>
+                          {r.disc && (
+                            <div className="mt-[12px] pt-[12px] border-t border-[#e5e7eb] flex items-start gap-[8px]">
+                              <span className="text-[10px] font-semibold text-[#92400e] bg-[#fff7ed] border border-[#fed7aa] px-[6px] py-[1px] rounded-full shrink-0 mt-[1px]">Disclosure</span>
+                              <p className="text-[12px] text-[#374151]">{r.disc}</p>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 );
               })}
             </tbody>
@@ -680,10 +787,10 @@ function PipelinePage() {
 /* ── Deal Analysis data ── */
 const WIN_LOSS_BANDS = [
   { band: 'Overall',  total: 132, won: 48, lost: 84, rate: 36, avgTime: '2.8 days' },
-  { band: '€0-3k',   total: 71,  won: 32, lost: 39, rate: 45, avgTime: '2.1 days' },
-  { band: '€3k-5k',  total: 74,  won: 28, lost: 46, rate: 38, avgTime: '2.4 days' },
-  { band: '€5k-10k', total: 120, won: 42, lost: 78, rate: 35, avgTime: '3.2 days' },
-  { band: '€10k+',   total: 64,  won: 18, lost: 46, rate: 28, avgTime: '4.1 days' },
+  { band: '€0–3k',   total: 40,  won: 18, lost: 22, rate: 45, avgTime: '2.1 days' },
+  { band: '€3k–7k',  total: 55,  won: 21, lost: 34, rate: 38, avgTime: '2.6 days' },
+  { band: '€7k–15k', total: 27,  won: 7,  lost: 20, rate: 26, avgTime: '3.4 days' },
+  { band: '€15k+',   total: 10,  won: 2,  lost: 8,  rate: 20, avgTime: '4.8 days' },
 ];
 
 const LOSS_REASONS = [
@@ -695,10 +802,10 @@ const LOSS_REASONS = [
 ];
 
 const PRICE_GAP = [
-  { band: '€0-3k',   offered: '€2,200',  expected: '€2,800',  gap: -21 },
-  { band: '€3k-5k',  offered: '€4,100',  expected: '€4,600',  gap: -11 },
-  { band: '€5k-10k', offered: '€7,200',  expected: '€8,100',  gap: -11 },
-  { band: '€10k+',   offered: '€14,500', expected: '€16,200', gap: -10 },
+  { band: '€0–3k',   offered: '€2,200',  expected: '€2,800',  gap: -21 },
+  { band: '€3k–7k',  offered: '€4,800',  expected: '€5,600',  gap: -14 },
+  { band: '€7k–15k', offered: '€9,400',  expected: '€11,200', gap: -16 },
+  { band: '€15k+',   offered: '€18,200', expected: '€21,500', gap: -15 },
 ];
 
 const FUNNEL_STAGES = [
@@ -709,6 +816,15 @@ const FUNNEL_STAGES = [
   { stage: 'Won',            deals: 48,  value: '€405k',  dropOff: null, dropOffRate: null, avgTime: '—',        conv: 29  },
 ];
 
+
+const LOST_DEALS = [
+  { id: '49854685', make: 'FORD MONDEO',    owner: 'Michael', oBg: '#0891b2', exp: '€9,500',  trade: '€7,200',  fair: '€8,400',  gap: -2300, reason: 'Price too high' },
+  { id: '49854684', make: 'BMW 3 SERIES',   owner: 'Sarah',   oBg: '#7c3aed', exp: '€14,000', trade: '€11,500', fair: '€12,800', gap: -2500, reason: 'Competitor won'  },
+  { id: '49854683', make: 'FORD FOCUS',     owner: 'Sarah',   oBg: '#7c3aed', exp: '€3,500',  trade: '€1,000',  fair: '€2,800',  gap: -2500, reason: 'Price too high' },
+  { id: '49854675', make: 'RENAULT MEGANE', owner: 'Emma',    oBg: '#16a34a', exp: '€6,000',  trade: '€4,800',  fair: '€5,400',  gap: -1200, reason: 'Timing issues'  },
+  { id: '49854674', make: 'VW PASSAT',      owner: 'David',   oBg: '#d97706', exp: '€11,000', trade: '€9,200',  fair: '€10,100', gap: -1800, reason: 'No response'    },
+  { id: '49854673', make: 'OPEL ASTRA',     owner: 'Lisa',    oBg: '#dc2626', exp: '€5,500',  trade: '€4,200',  fair: '€4,800',  gap: -1300, reason: 'Price too high' },
+];
 
 function DealAnalysisPage() {
   return (
@@ -730,6 +846,15 @@ function DealAnalysisPage() {
         <KpiCard label="Overall Win Rate" value="36.4%"    change="+2.1% vs last period" good={true}  />
         <KpiCard label="Avg Time to Win"  value="2.8 days" change="+0.3d vs last period" good={false} />
         <KpiCard label="Avg Deal Value"   value="€8,420"   change="-€240 vs last period" good={false} />
+      </div>
+
+      {/* Price gap callout */}
+      <div className="bg-[#fff7ed] border border-[#fed7aa] rounded-[8px] px-[20px] py-[14px] flex items-center gap-[12px]">
+        <span className="size-[8px] rounded-full shrink-0 bg-[#f97316]" />
+        <p className="text-[13px] text-[#92400e]">
+          <span className="font-semibold">Price gap is the #1 driver of non-conversion</span>
+          {' — '}35% of lost deals cite price as the primary reason, with an average gap of €1,240 between customer expectation and trade price.
+        </p>
       </div>
 
       {/* Win/Loss by Price Band */}
@@ -856,6 +981,45 @@ function DealAnalysisPage() {
         </table>
       </div>
 
+      {/* Lost Deal Explainer */}
+      <div className="bg-white border border-[#e5e7eb] rounded-[8px]">
+        <div className="px-[20px] py-[14px]" style={{ borderBottom: '1px solid #f1f5f9' }}>
+          <p className="text-[14px] font-semibold text-[#111827]">Lost Deal Explainer</p>
+          <p className="text-[12px] text-[#6b7280] mt-[2px]">All non-converting units with price expectation vs. trade price breakdown</p>
+        </div>
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+              {['VEHICLE','OWNER','CUSTOMER EXP.','TRADE PRICE','FAIR CONDITION','GAP','LOSS REASON'].map((h, i) => (
+                <th key={i} className={`px-[20px] py-[10px] text-[11px] font-medium text-[#9ca3af] uppercase tracking-wide whitespace-nowrap ${i <= 1 ? 'text-left' : 'text-right'} ${i === 0 ? 'pl-[20px]' : ''}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {LOST_DEALS.map((r, i) => (
+              <tr key={i} className="hover:bg-[#f9fafb] transition-colors" style={{ borderBottom: i < LOST_DEALS.length - 1 ? '1px solid #f9fafb' : 'none' }}>
+                <td className="px-[20px] py-[11px]">
+                  <p className="font-semibold text-[#111827]">{r.id}</p>
+                  <p className="text-[11px] text-[#9ca3af]">{r.make}</p>
+                </td>
+                <td className="px-[20px] py-[11px]">
+                  <div className="flex items-center gap-[8px]">
+                    <div className="size-[26px] rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0" style={{ background: r.oBg }}>{r.owner[0]}</div>
+                    <p className="text-[#374151]">{r.owner}</p>
+                  </div>
+                </td>
+                <td className="px-[20px] py-[11px] text-right text-[#374151]">{r.exp}</td>
+                <td className="px-[20px] py-[11px] text-right font-medium text-[#111827]">{r.trade}</td>
+                <td className="px-[20px] py-[11px] text-right text-[#9ca3af]">{r.fair}</td>
+                <td className="px-[20px] py-[11px] text-right font-semibold text-[#dc2626]">−€{Math.abs(r.gap).toLocaleString()}</td>
+                <td className="px-[20px] py-[11px] text-right">
+                  <span className="text-[12px] font-medium px-[8px] py-[2px] rounded-full bg-[#fff1f2] text-[#dc2626]">{r.reason}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   );
